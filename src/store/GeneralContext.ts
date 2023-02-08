@@ -7,24 +7,17 @@ export interface TagObject {
 
 interface ExpenseObject {
  amount: number;
- tag: string;
+ tag: TagObject;
  description?: string;
 }
 
-interface DayObject {
+export interface DayObject {
  expenses: ExpenseObject[];
-}
-
-export interface MonthObject {
- days: DayObject[];
-}
-
-export interface YearObject {
- months: MonthObject[];
+ day: string;
 }
 
 interface GeneralContextObject {
- year: YearObject;
+ year: DayObject[][];
  tags: TagObject[];
  updateDayExpense(
   nMonth: number,
@@ -35,7 +28,7 @@ interface GeneralContextObject {
 }
 
 const GeneralContext = React.createContext<GeneralContextObject>({
- year: { months: [] },
+ year: [],
  tags: [],
  updateDayExpense(nMonth, nDay, newExpenseObject) {},
  newTag(tag) {},
