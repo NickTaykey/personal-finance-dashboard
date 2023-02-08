@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import GeneralContext, { DayObject } from './store/GeneralContext';
+import TagsMenu from './TagsMenu';
 
 function monthNameToNumber(month: string) {
  switch (month.toLowerCase()) {
@@ -61,6 +62,7 @@ const Month = () => {
   markup = (
    <>
     <h1>Month Page</h1>
+    <TagsMenu />
     <table>
      <tbody>
       {tableRows.map((row, rowIdx) => (
