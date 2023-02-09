@@ -39,6 +39,42 @@ function currentYearByMonth(tags: TagObject[]) {
       description: 'standard description',
       tag: tags[2],
      },
+     {
+      id: crypto.randomUUID(),
+      amount: 19.99,
+      description: 'standard description',
+      tag: tags[0],
+     },
+     {
+      id: crypto.randomUUID(),
+      amount: 15.0,
+      description: 'standard description',
+      tag: tags[1],
+     },
+     {
+      id: crypto.randomUUID(),
+      amount: 9.99,
+      description: 'standard description',
+      tag: tags[2],
+     },
+     {
+      id: crypto.randomUUID(),
+      amount: 19.99,
+      description: 'standard description',
+      tag: tags[0],
+     },
+     {
+      id: crypto.randomUUID(),
+      amount: 15.0,
+      description: 'standard description',
+      tag: tags[1],
+     },
+     {
+      id: crypto.randomUUID(),
+      amount: 9.99,
+      description: 'standard description',
+      tag: tags[2],
+     },
     ],
    });
   }
@@ -87,6 +123,25 @@ const GeneralContextProvider: React.FC<{
     setSelectedDay,
     year,
     tags,
+    deleteDayExpense(expenseId) {
+     setYear((current) => {
+      return current.map((month, monthId) => {
+       return monthId === selectedDay!.monthIdx
+        ? month.map((day) => {
+           if (day.id === selectedDay!.id) {
+            const newSelectedDay = {
+             ...day,
+             expenses: day.expenses.filter((e) => e.id !== expenseId),
+            };
+            setSelectedDay(newSelectedDay);
+            return newSelectedDay;
+           }
+           return day;
+          })
+        : month;
+      });
+     });
+    },
     updateDayExpense(expense) {
      setYear((current) => {
       return current.map((month, monthId) => {

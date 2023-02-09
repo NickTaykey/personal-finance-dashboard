@@ -1,46 +1,31 @@
-import * as c from '@chakra-ui/react';
+import GeneralContext, { DayObject } from './store/GeneralContext';
 import ExpenseForm from './ExpenseForm';
-import { DayObject } from './store/GeneralContext';
+import * as c from '@chakra-ui/react';
+import { useContext, useState } from 'react';
+import { getMonthName } from './helpers';
+import DayModalExpenseTable from './DayModalExpenseTable';
 
 interface DayModalProps {
- selectedDay: DayObject;
- currentMonth: string;
  isOpen: boolean;
  onClose(): void;
 }
 
 const DayModal = (props: DayModalProps) => {
+ const generalContext = useContext(GeneralContext);
  return (
-  <c.Modal isOpen={props.isOpen} onClose={props.onClose} size="xl">
+  <c.Modal isOpen={props.isOpen} onClose={props.onClose} size="4xl">
    <c.ModalOverlay />
    <c.ModalContent>
     <c.ModalHeader>
-     {props.selectedDay.day} {props.currentMonth}
+     {generalContext.selectedDay!.day}{' '}
+     {generalContext.selectedDay!.monthDayIdx + 1} of{' '}
+     {getMonthName(generalContext.selectedDay!.monthIdx)}
     </c.ModalHeader>
     <c.ModalCloseButton />
     <c.ModalBody my="3">
-     <c.Table mb="5">
-      <c.Thead>
-       <c.Tr>
-        <c.Th>Amout</c.Th>
-        <c.Th>Label</c.Th>
-        <c.Th>Descrition?</c.Th>
-       </c.Tr>
-      </c.Thead>
-      <c.Tbody>
-       {props.selectedDay.expenses.map((e) => (
-        <c.Tr
-         backgroundColor={e.tag.bgColor}
-         key={crypto.randomUUID()}
-         color={e.tag.textColor}
-        >
-         <c.Td>{e.amount}</c.Td>
-         <c.Td>{e.tag.name}</c.Td>
-         <c.Td>{e.description}</c.Td>
-        </c.Tr>
-       ))}
-      </c.Tbody>
-     </c.Table>
+     <c.Box maxHeight="60vh" overflowY="auto">
+      <DayModalExpenseTable />
+     </c.Box>
      <ExpenseForm />
     </c.ModalBody>
    </c.ModalContent>

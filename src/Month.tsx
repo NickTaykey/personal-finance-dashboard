@@ -111,12 +111,7 @@ const Month = () => {
      </c.Tbody>
     </c.Table>
     {generalContext.selectedDay && isOpen && (
-     <DayModal
-      currentMonth={monthName}
-      isOpen={isOpen}
-      onClose={onClose}
-      selectedDay={generalContext.selectedDay}
-     />
+     <DayModal isOpen={isOpen} onClose={onClose} />
     )}
    </>
   );

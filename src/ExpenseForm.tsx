@@ -26,7 +26,7 @@ const ExpenseForm = () => {
  };
 
  return (
-  <c.Accordion allowToggle>
+  <c.Accordion allowToggle mt="6">
    <c.AccordionItem>
     <h2>
      <c.AccordionButton>

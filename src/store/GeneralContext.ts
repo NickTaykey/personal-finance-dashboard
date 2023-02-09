@@ -25,6 +25,7 @@ export interface DayObject {
 interface GeneralContextObject {
  addDayExpense(amount: number, tag: TagObject, description?: string): void;
  updateDayExpense(newExpense: ExpenseObject): void;
+ deleteDayExpense(expenseId: string): void;
  setSelectedDay(day: DayObject | null): void;
  selectedDay: DayObject | null;
  newTag(tag: { name: string; bgColor: string; textColor: string }): void;
@@ -35,6 +36,7 @@ interface GeneralContextObject {
 const GeneralContext = React.createContext<GeneralContextObject>({
  addDayExpense(amount, tag, description) {},
  updateDayExpense(newExpense) {},
+ deleteDayExpense(expenseId) {},
  setSelectedDay(day: DayObject | null) {},
  selectedDay: null,
  newTag(tag) {},
