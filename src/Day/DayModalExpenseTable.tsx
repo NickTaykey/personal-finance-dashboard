@@ -1,4 +1,4 @@
-import GeneralContext, { ExpenseObject } from './store/GeneralContext';
+import GeneralContext, { ExpenseObject } from '../store/GeneralContext';
 import ExpenseTableRow from './ExpenseRowTable';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';

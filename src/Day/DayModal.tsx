@@ -1,7 +1,7 @@
 import DayModalExpenseTable from './DayModalExpenseTable';
-import GeneralContext from './store/GeneralContext';
-import { getMonthName } from './helpers';
-import ExpenseForm from './ExpenseForm';
+import GeneralContext from '../store/GeneralContext';
+import NewExpenseForm from './NewExpenseForm';
+import { getMonthName } from '../helpers';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
 
@@ -23,7 +23,7 @@ const DayModal = (props: DayModalProps) => {
     </c.ModalHeader>
     <c.ModalCloseButton />
     <c.ModalBody my="3">
-     <ExpenseForm />
+     <NewExpenseForm />
      <c.Box maxHeight="60vh" overflowY="auto">
       <DayModalExpenseTable />
      </c.Box>

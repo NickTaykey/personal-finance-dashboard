@@ -1,6 +1,6 @@
+import GeneralContext from '../store/GeneralContext';
 import React, { useContext, useRef } from 'react';
-import GeneralContext from './store/GeneralContext';
-import { isColorDark } from './helpers';
+import { isColorDark } from '../helpers';
 import * as c from '@chakra-ui/react';
 import TagItem from './TagItem';
 

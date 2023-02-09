@@ -1,4 +1,4 @@
-import GeneralContext, { ExpenseObject } from './store/GeneralContext';
+import GeneralContext, { ExpenseObject } from '../store/GeneralContext';
 import { FaCheck, FaTimes, FaEdit, FaTrash } from 'react-icons/fa';
 import { useState, useContext } from 'react';
 import * as c from '@chakra-ui/react';

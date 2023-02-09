@@ -1,12 +1,13 @@
-import GeneralContext, { DayObject } from './store/GeneralContext';
+import GeneralContext, { DayObject } from '../store/GeneralContext';
 import { FaExpandArrowsAlt, FaTags } from 'react-icons/fa';
-import { monthNameToNumber } from './helpers';
+import { monthNameToNumber } from '../helpers';
 import { useParams } from 'react-router-dom';
-import TagsDrawer from './TagsDrawer';
+import TagsDrawer from '../Tag/TagsDrawer';
 import * as c from '@chakra-ui/react';
+import DayModal from '../Day/DayModal';
 import { useContext } from 'react';
-import DayModal from './DayModal';
 import React from 'react';
+import MonthBalance from './MonthBalance';
 
 function divideArray(array: DayObject[]) {
  const chunkSize = Math.ceil(array.length / 4);
@@ -34,8 +35,8 @@ const Month = () => {
  let markup = <div>Month not valid</div>;
 
  if (
-  generalContext.year.length &&
   monthName &&
+  generalContext.year.length &&
   monthNameToNumber(monthName) !== -1
  ) {
   const selectedMonthIdx = monthNameToNumber(monthName) - 1;
@@ -69,11 +70,12 @@ const Month = () => {
        icon={<FaTags />}
       />
      </c.Flex>
+     <MonthBalance currentMonthIdx={currentMonthIdx} />
      <c.Box mt="5" width="50%">
       <c.Flex justifyContent="space-between">
        {tableRows.map((row, rowIdx) => {
         return (
-         <c.Flex direction="column" justify="center" key={rowIdx}>
+         <c.Flex direction="column" key={rowIdx}>
           {row.map((day, colIdx) => (
            <c.Box key={`${rowIdx}-${colIdx}`}>
             {colIdx === 0 && <c.Box fontWeight="bold">Week {rowIdx + 1}</c.Box>}

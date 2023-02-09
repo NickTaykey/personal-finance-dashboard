@@ -1,4 +1,4 @@
-import GeneralContext, { TagObject } from './store/GeneralContext';
+import GeneralContext, { TagObject } from '../store/GeneralContext';
 import { FaTrash } from 'react-icons/fa';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';

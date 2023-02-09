@@ -1,6 +1,6 @@
 import { FaTags } from 'react-icons/fa';
 import * as c from '@chakra-ui/react';
-import TagsDrawer from './TagsDrawer';
+import TagsDrawer from './Tag/TagsDrawer';
 
 const Home = () => {
  const { isOpen, onOpen, onClose } = c.useDisclosure();

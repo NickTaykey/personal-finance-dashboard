@@ -1,8 +1,8 @@
 import * as c from '@chakra-ui/react';
-import GeneralContext from './store/GeneralContext';
+import GeneralContext from '../store/GeneralContext';
 import React, { useContext, useState } from 'react';
 
-const ExpenseForm = () => {
+const NewExpenseForm = () => {
  const generalContext = useContext(GeneralContext);
  const [errorMessage, setErrorMessage] = useState<string | null>(null);
  const [amountValue, setAmountValue] = useState<number>(0);
@@ -90,4 +90,4 @@ const ExpenseForm = () => {
  );
 };
 
-export default ExpenseForm;
+export default NewExpenseForm;
