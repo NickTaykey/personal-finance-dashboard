@@ -1,7 +1,7 @@
 import GeneralContext from '../store/GeneralContext';
-import * as c from '@chakra-ui/react';
-import { useContext, useRef, useState } from 'react';
 import { FaMinus, FaPlus } from 'react-icons/fa';
+import { useContext, useState } from 'react';
+import * as c from '@chakra-ui/react';
 
 interface MonthBalanceProps {
  currentMonthIdx: number;
@@ -10,7 +10,7 @@ interface MonthBalanceProps {
 const MonthBalance = (props: MonthBalanceProps) => {
  const [budgetValue, setBudgetValue] = useState(0);
  const generalContext = useContext(GeneralContext);
- const amountSpent = generalContext.year[props.currentMonthIdx].reduce(
+ const amountSpent = generalContext.year[props.currentMonthIdx].days.reduce(
   (acm, day) => {
    const tot = day.expenses.reduce((tot, exp) => (tot += exp.amount), 0);
    return acm + tot;
@@ -38,8 +38,7 @@ const MonthBalance = (props: MonthBalanceProps) => {
     )}
    </c.HStack>
    <c.FormControl width={{ sm: '100%', md: '20%' }} my="2">
-    <c.FormLabel>Your monthly Budget</c.FormLabel>
-
+    <c.FormLabel>Your monthly Budget: </c.FormLabel>
     <c.NumberInput
      defaultValue={0}
      min={0}

@@ -1,4 +1,8 @@
-import GeneralContext, { DayObject, TagObject } from './GeneralContext';
+import GeneralContext, {
+ DayObject,
+ MonthObject,
+ TagObject,
+} from './GeneralContext';
 import { useEffect, useState } from 'react';
 
 function currentYearByMonth(tags: TagObject[]) {
@@ -79,7 +83,10 @@ function currentYearByMonth(tags: TagObject[]) {
    });
   }
 
-  months.push(daysInCurrentMonth);
+  months.push({
+   monthBudget: Math.trunc(Math.random() * 6000),
+   days: daysInCurrentMonth,
+  });
  }
 
  return months;
@@ -88,7 +95,7 @@ function currentYearByMonth(tags: TagObject[]) {
 const GeneralContextProvider: React.FC<{
  children: React.ReactNode[] | React.ReactNode;
 }> = (props) => {
- const [year, setYear] = useState<DayObject[][]>([]);
+ const [year, setYear] = useState<MonthObject[]>([]);
  const [tags, setTags] = useState<TagObject[]>([
   {
    name: 'Food',
@@ -111,7 +118,7 @@ const GeneralContextProvider: React.FC<{
  ]);
 
  useEffect(() => {
-  setYear(currentYearByMonth(tags) as DayObject[][]);
+  setYear(currentYearByMonth(tags) as MonthObject[]);
  }, [tags]);
 
  const [selectedDay, setSelectedDay] = useState<DayObject | null>(null);
@@ -127,33 +134,38 @@ const GeneralContextProvider: React.FC<{
      setTags((current) => current.filter((t) => t.id !== tagId));
      setYear((current) => {
       return current.map((month) => {
-       return month.map((d) => {
-        return {
-         ...d,
-         expenses: d.expenses.map((e) => {
-          return e.tag?.id === tagId ? { ...e, tag: null } : e;
-         }),
-        };
-       });
+       return {
+        ...month,
+        days: month.days.map((d) => {
+         return {
+          ...d,
+          expenses: d.expenses.map((e) => {
+           return e.tag?.id === tagId ? { ...e, tag: null } : e;
+          }),
+         };
+        }),
+       };
       });
      });
     },
     deleteDayExpense(expenseId) {
      setYear((current) => {
       return current.map((month, monthId) => {
-       return monthId === selectedDay!.monthIdx
-        ? month.map((day) => {
-           if (day.id === selectedDay!.id) {
-            const newSelectedDay = {
-             ...day,
-             expenses: day.expenses.filter((e) => e.id !== expenseId),
-            };
-            setSelectedDay(newSelectedDay);
-            return newSelectedDay;
-           }
-           return day;
-          })
-        : month;
+       const days =
+        monthId === selectedDay!.monthIdx
+         ? month.days.map((day) => {
+            if (day.id === selectedDay!.id) {
+             const newSelectedDay = {
+              ...day,
+              expenses: day.expenses.filter((e) => e.id !== expenseId),
+             };
+             setSelectedDay(newSelectedDay);
+             return newSelectedDay;
+            }
+            return day;
+           })
+         : month.days;
+       return { ...month, days };
       });
      });
     },
@@ -161,19 +173,22 @@ const GeneralContextProvider: React.FC<{
      setYear((current) => {
       return current.map((month, monthId) => {
        return monthId === selectedDay!.monthIdx
-        ? month.map((day) => {
-           if (day.id === selectedDay!.id) {
-            const newSelectedDay = {
-             ...day,
-             expenses: day.expenses.map((e) => {
-              return e.id === expense.id ? { ...expense } : e;
-             }),
-            };
-            setSelectedDay(newSelectedDay);
-            return newSelectedDay;
-           }
-           return day;
-          })
+        ? {
+           ...month,
+           days: month.days.map((day) => {
+            if (day.id === selectedDay!.id) {
+             const newSelectedDay = {
+              ...day,
+              expenses: day.expenses.map((e) => {
+               return e.id === expense.id ? { ...expense } : e;
+              }),
+             };
+             setSelectedDay(newSelectedDay);
+             return newSelectedDay;
+            }
+            return day;
+           }),
+          }
         : month;
       });
      });
@@ -183,20 +198,23 @@ const GeneralContextProvider: React.FC<{
      setYear((current) => {
       return current.map((month, monthIdx) => {
        return monthIdx === selectedDay!.monthIdx
-        ? month.map((day) => {
-           if (day.id === selectedDay!.id) {
-            const newSelectedDay = {
-             ...day,
-             expenses: [
-              ...day.expenses,
-              { id: crypto.randomUUID(), tag, description, amount },
-             ],
-            };
-            setSelectedDay(newSelectedDay);
-            return newSelectedDay;
-           }
-           return day;
-          })
+        ? {
+           ...month,
+           days: month.days.map((day) => {
+            if (day.id === selectedDay!.id) {
+             const newSelectedDay = {
+              ...day,
+              expenses: [
+               ...day.expenses,
+               { id: crypto.randomUUID(), tag, description, amount },
+              ],
+             };
+             setSelectedDay(newSelectedDay);
+             return newSelectedDay;
+            }
+            return day;
+           }),
+          }
         : month;
       });
      });

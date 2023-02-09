@@ -3,11 +3,11 @@ import { FaExpandArrowsAlt, FaTags } from 'react-icons/fa';
 import { monthNameToNumber } from '../helpers';
 import { useParams } from 'react-router-dom';
 import TagsDrawer from '../Tag/TagsDrawer';
-import * as c from '@chakra-ui/react';
+import MonthBalance from './MonthBalance';
 import DayModal from '../Day/DayModal';
+import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
 import React from 'react';
-import MonthBalance from './MonthBalance';
 
 function divideArray(array: DayObject[]) {
  const chunkSize = Math.ceil(array.length / 4);
@@ -45,7 +45,7 @@ const Month = () => {
   const currentMonthIdx = date.getMonth();
   const currentDay = date.getDate();
 
-  const tableRows = divideArray(monthObject);
+  const tableRows = divideArray(monthObject.days);
 
   const monthTableClickHandlerFactory = (clickedDay: DayObject) => {
    return (e: React.MouseEvent<SVGElement>) => {

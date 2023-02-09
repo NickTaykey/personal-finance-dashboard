@@ -14,6 +14,11 @@ export interface ExpenseObject {
  id: string;
 }
 
+export interface MonthObject {
+ monthBudget: number;
+ days: DayObject[];
+}
+
 export interface DayObject {
  expenses: ExpenseObject[];
  monthDayIdx: number;
@@ -30,7 +35,7 @@ interface GeneralContextObject {
  selectedDay: DayObject | null;
  newTag(tag: { name: string; bgColor: string; textColor: string }): void;
  deleteTag(tadId: string): void;
- year: DayObject[][];
+ year: MonthObject[];
  tags: TagObject[];
 }
 
