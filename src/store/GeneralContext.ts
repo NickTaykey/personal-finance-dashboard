@@ -35,6 +35,7 @@ interface GeneralContextObject {
  selectedDay: DayObject | null;
  newTag(tag: { name: string; bgColor: string; textColor: string }): void;
  deleteTag(tadId: string): void;
+ updateBudget(monthIdx: number, newBudget: number): void;
  year: MonthObject[];
  tags: TagObject[];
 }
@@ -47,6 +48,7 @@ const GeneralContext = React.createContext<GeneralContextObject>({
  selectedDay: null,
  newTag(tag) {},
  deleteTag(tadId: string) {},
+ updateBudget(monthIdx, newBudget) {},
  year: [],
  tags: [],
 });

@@ -8,8 +8,10 @@ interface MonthBalanceProps {
 }
 
 const MonthBalance = (props: MonthBalanceProps) => {
- const [budgetValue, setBudgetValue] = useState(0);
  const generalContext = useContext(GeneralContext);
+ const currentMonth = generalContext.year[props.currentMonthIdx];
+ const [budgetValue, setBudgetValue] = useState(currentMonth.monthBudget);
+ const [errorAlert, setErrorAlert] = useState<string | null>(null);
  const amountSpent = generalContext.year[props.currentMonthIdx].days.reduce(
   (acm, day) => {
    const tot = day.expenses.reduce((tot, exp) => (tot += exp.amount), 0);
@@ -17,6 +19,18 @@ const MonthBalance = (props: MonthBalanceProps) => {
   },
   0
  );
+
+ const handleBudgetChange = (_: unknown, value: number) => {
+  const newBudget = Number(value);
+  if (isNaN(newBudget)) {
+   setErrorAlert('Invalid budget value');
+  } else {
+   setBudgetValue(newBudget);
+   generalContext.updateBudget(props.currentMonthIdx, Number(value));
+   setErrorAlert(null);
+  }
+ };
+
  return (
   <c.Flex mt="5" direction="column">
    <c.HStack alignItems="center" spacing="4">
@@ -38,12 +52,13 @@ const MonthBalance = (props: MonthBalanceProps) => {
     )}
    </c.HStack>
    <c.FormControl width={{ sm: '100%', md: '20%' }} my="2">
+    {errorAlert && <c.Alert colorScheme="red">{errorAlert}</c.Alert>}
     <c.FormLabel>Your monthly Budget: </c.FormLabel>
     <c.NumberInput
-     defaultValue={0}
      min={0}
      step={0.01}
-     onChange={(_, value) => setBudgetValue(Number(value))}
+     onChange={handleBudgetChange}
+     value={budgetValue}
     >
      <c.NumberInputField />
      <c.NumberInputStepper>

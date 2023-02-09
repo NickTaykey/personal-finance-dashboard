@@ -8,9 +8,9 @@ import { useEffect, useState } from 'react';
 function currentYearByMonth(tags: TagObject[]) {
  const now = new Date();
  const currentYear = now.getFullYear();
- const months = [];
  const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+ const months = [];
 
  for (let i = 0; i < 12; i++) {
   let daysInCurrentMonth = [];
@@ -130,6 +130,13 @@ const GeneralContextProvider: React.FC<{
     setSelectedDay,
     year,
     tags,
+    updateBudget(monthIdx, newBudget) {
+     setYear((current) =>
+      current.map((month, idx) => {
+       return idx === monthIdx ? { ...month, monthBudget: newBudget } : month;
+      })
+     );
+    },
     deleteTag(tagId) {
      setTags((current) => current.filter((t) => t.id !== tagId));
      setYear((current) => {
@@ -193,7 +200,6 @@ const GeneralContextProvider: React.FC<{
       });
      });
     },
-
     addDayExpense(amount, tag, description) {
      setYear((current) => {
       return current.map((month, monthIdx) => {
@@ -219,7 +225,6 @@ const GeneralContextProvider: React.FC<{
       });
      });
     },
-
     newTag(tag) {
      setTags((current) => [...current, { ...tag, id: crypto.randomUUID() }]);
     },

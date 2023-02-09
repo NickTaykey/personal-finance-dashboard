@@ -11,7 +11,7 @@ const router = createBrowserRouter([
   element: <Home />,
  },
  {
-  path: '/:month',
+  path: '/months/:month',
   element: <Month />,
  },
 ]);
