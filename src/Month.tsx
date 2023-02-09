@@ -1,7 +1,10 @@
-import { useContext } from 'react';
-import { useParams } from 'react-router-dom';
 import GeneralContext, { DayObject } from './store/GeneralContext';
+import { FaExpandArrowsAlt } from 'react-icons/fa';
+import { useParams } from 'react-router-dom';
+import * as c from '@chakra-ui/react';
+import { useContext } from 'react';
 import TagsMenu from './TagsMenu';
+import DayModal from './DayModal';
 
 function monthNameToNumber(month: string) {
  switch (month.toLowerCase()) {
@@ -44,6 +47,7 @@ function divideArray(array: DayObject[]) {
 }
 
 const Month = () => {
+ const { isOpen, onOpen, onClose } = c.useDisclosure();
  const generalContext = useContext(GeneralContext);
  const { month: monthName } = useParams();
 
@@ -54,29 +58,66 @@ const Month = () => {
   monthName &&
   monthNameToNumber(monthName) !== -1
  ) {
-  const monthObject = generalContext.year[monthNameToNumber(monthName) - 1];
+  const selectedMonthIdx = monthNameToNumber(monthName) - 1;
+  const monthObject = generalContext.year[selectedMonthIdx];
+  const date = new Date();
+  const currentMonthIdx = date.getMonth();
+  const currentDay = date.getDate();
 
   const tableRows = divideArray(monthObject);
 
-  let monthDayIdx = 0;
+  const monthTableClickHandlerFactory = (clickedDay: DayObject) => {
+   return (e: React.MouseEvent<SVGElement>) => {
+    generalContext.setSelectedDay(clickedDay);
+    onOpen();
+   };
+  };
+
+  let monthDayIdx = 1;
   markup = (
    <>
-    <h1>Month Page</h1>
+    <c.Heading>{monthName}</c.Heading>
     <TagsMenu />
-    <table>
-     <tbody>
+    <c.Table>
+     <c.Tbody>
       {tableRows.map((row, rowIdx) => (
-       <tr key={rowIdx}>
-        <td style={{ padding: '1rem' }}>Week {rowIdx + 1}</td>
+       <c.Tr key={rowIdx}>
+        <c.Td style={{ padding: '1rem' }}>
+         <strong>Week {rowIdx + 1}</strong>
+        </c.Td>
         {row.map((day, colIdx) => (
-         <td key={`${rowIdx}-${colIdx}`} style={{ padding: '1rem' }}>
-          {++monthDayIdx} {day.day}
-         </td>
+         <c.Td
+          key={`${rowIdx}-${colIdx}`}
+          style={{
+           padding: '1rem',
+           backgroundColor:
+            currentMonthIdx === selectedMonthIdx && currentDay === monthDayIdx
+             ? 'coral'
+             : 'transparent',
+          }}
+         >
+          <c.Flex justify="space-between">
+           <c.Text>
+            {monthDayIdx++} {day.day}
+           </c.Text>
+           <c.Box _hover={{ cursor: 'pointer' }}>
+            <FaExpandArrowsAlt onClick={monthTableClickHandlerFactory(day)} />
+           </c.Box>
+          </c.Flex>
+         </c.Td>
         ))}
-       </tr>
+       </c.Tr>
       ))}
-     </tbody>
-    </table>
+     </c.Tbody>
+    </c.Table>
+    {generalContext.selectedDay && isOpen && (
+     <DayModal
+      currentMonth={monthName}
+      isOpen={isOpen}
+      onClose={onClose}
+      selectedDay={generalContext.selectedDay}
+     />
+    )}
    </>
   );
  }

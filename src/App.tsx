@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import GeneralContextProvider from './store/GeneralContextProvider';
+import { ChakraProvider } from '@chakra-ui/react';
 import Month from './Month';
 import Home from './Home';
 import Day from './Day';
@@ -14,18 +15,16 @@ const router = createBrowserRouter([
   path: '/:month',
   element: <Month />,
  },
- {
-  path: '/:month/:day',
-  element: <Day />,
- },
 ]);
 
 function App() {
  return (
   <div className="App">
-   <GeneralContextProvider>
-    <RouterProvider router={router} />
-   </GeneralContextProvider>
+   <ChakraProvider>
+    <GeneralContextProvider>
+     <RouterProvider router={router} />
+    </GeneralContextProvider>
+   </ChakraProvider>
   </div>
  );
 }
