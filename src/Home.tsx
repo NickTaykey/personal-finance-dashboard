@@ -1,10 +1,10 @@
-import TagsMenu from './TagsMenu';
+import TagsDrawer from './TagsDrawer';
 
 const Home = () => {
  return (
   <>
    <h1>Home Page</h1>
-   <TagsMenu />
+   <TagsDrawer />
   </>
  );
 };

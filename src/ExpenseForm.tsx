@@ -1,6 +1,6 @@
 import * as c from '@chakra-ui/react';
 import GeneralContext from './store/GeneralContext';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 const ExpenseForm = () => {
  const generalContext = useContext(GeneralContext);
@@ -26,7 +26,7 @@ const ExpenseForm = () => {
  };
 
  return (
-  <c.Accordion allowToggle mt="6">
+  <c.Accordion allowToggle mb="6">
    <c.AccordionItem>
     <h2>
      <c.AccordionButton>

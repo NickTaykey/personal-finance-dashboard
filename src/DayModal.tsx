@@ -1,9 +1,9 @@
-import GeneralContext, { DayObject } from './store/GeneralContext';
+import DayModalExpenseTable from './DayModalExpenseTable';
+import GeneralContext from './store/GeneralContext';
+import { getMonthName } from './helpers';
 import ExpenseForm from './ExpenseForm';
 import * as c from '@chakra-ui/react';
-import { useContext, useState } from 'react';
-import { getMonthName } from './helpers';
-import DayModalExpenseTable from './DayModalExpenseTable';
+import { useContext } from 'react';
 
 interface DayModalProps {
  isOpen: boolean;
@@ -17,16 +17,16 @@ const DayModal = (props: DayModalProps) => {
    <c.ModalOverlay />
    <c.ModalContent>
     <c.ModalHeader>
-     {generalContext.selectedDay!.day}{' '}
+     Daily Expenses - {generalContext.selectedDay!.day}{' '}
      {generalContext.selectedDay!.monthDayIdx + 1} of{' '}
      {getMonthName(generalContext.selectedDay!.monthIdx)}
     </c.ModalHeader>
     <c.ModalCloseButton />
     <c.ModalBody my="3">
+     <ExpenseForm />
      <c.Box maxHeight="60vh" overflowY="auto">
       <DayModalExpenseTable />
      </c.Box>
-     <ExpenseForm />
     </c.ModalBody>
    </c.ModalContent>
   </c.Modal>

@@ -3,8 +3,8 @@ import { FaExpandArrowsAlt } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
-import TagsMenu from './TagsMenu';
 import DayModal from './DayModal';
+import TagsDrawer from './TagsDrawer';
 
 function monthNameToNumber(month: string) {
  switch (month.toLowerCase()) {
@@ -75,10 +75,14 @@ const Month = () => {
 
   let monthDayIdx = 1;
   markup = (
-   <>
-    <c.Heading>{monthName}</c.Heading>
-    <TagsMenu />
-    <c.Table>
+   <c.Box m="5">
+    <c.Flex justify="start">
+     <c.Heading textTransform="uppercase" mr="3">
+      {monthName}
+     </c.Heading>
+     <TagsDrawer />
+    </c.Flex>
+    <c.Table width="50vw" mt="5">
      <c.Tbody>
       {tableRows.map((row, rowIdx) => (
        <c.Tr key={rowIdx}>
@@ -113,7 +117,7 @@ const Month = () => {
     {generalContext.selectedDay && isOpen && (
      <DayModal isOpen={isOpen} onClose={onClose} />
     )}
-   </>
+   </c.Box>
   );
  }
 

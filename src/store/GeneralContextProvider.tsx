@@ -112,7 +112,7 @@ const GeneralContextProvider: React.FC<{
 
  useEffect(() => {
   setYear(currentYearByMonth(tags) as DayObject[][]);
- }, []);
+ }, [tags]);
 
  const [selectedDay, setSelectedDay] = useState<DayObject | null>(null);
 
