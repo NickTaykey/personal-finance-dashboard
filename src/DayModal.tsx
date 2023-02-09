@@ -13,7 +13,7 @@ interface DayModalProps {
 const DayModal = (props: DayModalProps) => {
  const generalContext = useContext(GeneralContext);
  return (
-  <c.Modal isOpen={props.isOpen} onClose={props.onClose} size="4xl">
+  <c.Modal isOpen={props.isOpen} onClose={props.onClose} size="2xl">
    <c.ModalOverlay />
    <c.ModalContent>
     <c.ModalHeader>

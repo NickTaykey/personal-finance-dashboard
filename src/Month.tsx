@@ -1,41 +1,12 @@
 import GeneralContext, { DayObject } from './store/GeneralContext';
-import { FaExpandArrowsAlt } from 'react-icons/fa';
+import { FaExpandArrowsAlt, FaTags } from 'react-icons/fa';
+import { monthNameToNumber } from './helpers';
 import { useParams } from 'react-router-dom';
+import TagsDrawer from './TagsDrawer';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
 import DayModal from './DayModal';
-import TagsDrawer from './TagsDrawer';
-
-function monthNameToNumber(month: string) {
- switch (month.toLowerCase()) {
-  case 'jan':
-   return 1;
-  case 'feb':
-   return 2;
-  case 'mar':
-   return 3;
-  case 'apr':
-   return 4;
-  case 'may':
-   return 5;
-  case 'jun':
-   return 6;
-  case 'jul':
-   return 7;
-  case 'aug':
-   return 8;
-  case 'sep':
-   return 9;
-  case 'oct':
-   return 10;
-  case 'nov':
-   return 11;
-  case 'dec':
-   return 12;
-  default:
-   return -1;
- }
-}
+import React from 'react';
 
 function divideArray(array: DayObject[]) {
  const chunkSize = Math.ceil(array.length / 4);
@@ -47,7 +18,16 @@ function divideArray(array: DayObject[]) {
 }
 
 const Month = () => {
- const { isOpen, onOpen, onClose } = c.useDisclosure();
+ const {
+  isOpen: isModalOpen,
+  onOpen: onModalOpen,
+  onClose: onModalClose,
+ } = c.useDisclosure();
+ const {
+  isOpen: isDrawerOpen,
+  onOpen: onDrawerOpen,
+  onClose: onDrawerClose,
+ } = c.useDisclosure();
  const generalContext = useContext(GeneralContext);
  const { month: monthName } = useParams();
 
@@ -69,55 +49,64 @@ const Month = () => {
   const monthTableClickHandlerFactory = (clickedDay: DayObject) => {
    return (e: React.MouseEvent<SVGElement>) => {
     generalContext.setSelectedDay(clickedDay);
-    onOpen();
+    onModalOpen();
    };
   };
 
   let monthDayIdx = 1;
   markup = (
-   <c.Box m="5">
-    <c.Flex justify="start">
-     <c.Heading textTransform="uppercase" mr="3">
-      {monthName}
-     </c.Heading>
-     <TagsDrawer />
-    </c.Flex>
-    <c.Table width="50vw" mt="5">
-     <c.Tbody>
-      {tableRows.map((row, rowIdx) => (
-       <c.Tr key={rowIdx}>
-        <c.Td style={{ padding: '1rem' }}>
-         <strong>Week {rowIdx + 1}</strong>
-        </c.Td>
-        {row.map((day, colIdx) => (
-         <c.Td
-          key={`${rowIdx}-${colIdx}`}
-          style={{
-           padding: '1rem',
-           backgroundColor:
-            currentMonthIdx === selectedMonthIdx && currentDay === monthDayIdx
-             ? 'coral'
-             : 'transparent',
-          }}
-         >
-          <c.Flex justify="space-between">
-           <c.Text>
-            {monthDayIdx++} {day.day}
-           </c.Text>
-           <c.Box _hover={{ cursor: 'pointer' }}>
-            <FaExpandArrowsAlt onClick={monthTableClickHandlerFactory(day)} />
+   <>
+    <TagsDrawer isOpen={isDrawerOpen} onClose={onDrawerClose} />
+    <c.Box m="5">
+     <c.Flex justify="start">
+      <c.Heading textTransform="uppercase" mr="3">
+       {monthName}
+      </c.Heading>
+      <c.IconButton
+       colorScheme="telegram"
+       onClick={onDrawerOpen}
+       aria-label="Open tags menu"
+       icon={<FaTags />}
+      />
+     </c.Flex>
+     <c.Box mt="5" width="50%">
+      <c.Flex justifyContent="space-between">
+       {tableRows.map((row, rowIdx) => {
+        return (
+         <c.Flex direction="column" justify="center" key={rowIdx}>
+          {row.map((day, colIdx) => (
+           <c.Box key={`${rowIdx}-${colIdx}`}>
+            {colIdx === 0 && <c.Box fontWeight="bold">Week {rowIdx + 1}</c.Box>}
+            <c.Flex
+             alignItems="center"
+             style={{
+              padding: '1rem',
+              backgroundColor:
+               currentMonthIdx === selectedMonthIdx &&
+               currentDay === monthDayIdx
+                ? 'coral'
+                : 'transparent',
+             }}
+            >
+             <c.Text mr="2">
+              {monthDayIdx++} {day.day}
+             </c.Text>
+             <c.Box _hover={{ cursor: 'pointer' }}>
+              <FaExpandArrowsAlt onClick={monthTableClickHandlerFactory(day)} />
+             </c.Box>
+            </c.Flex>
            </c.Box>
-          </c.Flex>
-         </c.Td>
-        ))}
-       </c.Tr>
-      ))}
-     </c.Tbody>
-    </c.Table>
-    {generalContext.selectedDay && isOpen && (
-     <DayModal isOpen={isOpen} onClose={onClose} />
+          ))}
+         </c.Flex>
+        );
+       })}
+      </c.Flex>
+     </c.Box>
+    </c.Box>
+    {generalContext.selectedDay && isModalOpen && (
+     <DayModal isOpen={isModalOpen} onClose={onModalClose} />
     )}
-   </c.Box>
+   </>
   );
  }
 

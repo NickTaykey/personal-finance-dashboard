@@ -9,7 +9,7 @@ export interface TagObject {
 
 export interface ExpenseObject {
  amount: number;
- tag: TagObject;
+ tag: TagObject | null;
  description?: string;
  id: string;
 }
@@ -29,6 +29,7 @@ interface GeneralContextObject {
  setSelectedDay(day: DayObject | null): void;
  selectedDay: DayObject | null;
  newTag(tag: { name: string; bgColor: string; textColor: string }): void;
+ deleteTag(tadId: string): void;
  year: DayObject[][];
  tags: TagObject[];
 }
@@ -40,6 +41,7 @@ const GeneralContext = React.createContext<GeneralContextObject>({
  setSelectedDay(day: DayObject | null) {},
  selectedDay: null,
  newTag(tag) {},
+ deleteTag(tadId: string) {},
  year: [],
  tags: [],
 });

@@ -3,7 +3,6 @@ import GeneralContextProvider from './store/GeneralContextProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import Month from './Month';
 import Home from './Home';
-import Day from './Day';
 import './App.css';
 
 const router = createBrowserRouter([

@@ -7,7 +7,9 @@ const ExpenseTableRow = (props: ExpenseObject) => {
  const [descriptionValue, setDescriptionValue] = useState<string>(
   props.description || ''
  );
- const [tagNameValue, setTagNameValue] = useState<string>(props.tag.name);
+ const [tagNameValue, setTagNameValue] = useState<string>(
+  props.tag?.name || ''
+ );
  const [amountValue, setAmountValue] = useState<number>(props.amount);
  const [showEditingFields, setShowEditingFields] = useState(false);
  const generalContext = useContext(GeneralContext);
@@ -27,7 +29,7 @@ const ExpenseTableRow = (props: ExpenseObject) => {
  };
 
  return (
-  <c.Tr backgroundColor={props.tag.bgColor} color={props.tag.textColor}>
+  <c.Tr backgroundColor={props.tag?.bgColor} color={props.tag?.textColor}>
    <c.Td>
     {showEditingFields ? (
      <c.NumberInput
@@ -38,34 +40,34 @@ const ExpenseTableRow = (props: ExpenseObject) => {
       onChange={(_, amount) => {
        if (amount && !isNaN(amount)) setAmountValue(amount);
       }}
-      borderColor={props.tag.textColor}
+      borderColor={props.tag?.textColor}
       _hover={{
-       borderColor: props.tag.textColor,
+       borderColor: props.tag?.textColor,
       }}
      >
       <c.NumberInputField
        name="amount"
-       borderColor={props.tag.textColor}
+       borderColor={props.tag?.textColor}
        _hover={{
-        borderColor: props.tag.textColor,
+        borderColor: props.tag?.textColor,
        }}
       />
       <c.NumberInputStepper
-       borderColor={props.tag.textColor}
+       borderColor={props.tag?.textColor}
        _hover={{
-        borderColor: props.tag.textColor,
+        borderColor: props.tag?.textColor,
        }}
       >
        <c.NumberIncrementStepper
-        borderColor={props.tag.textColor}
+        borderColor={props.tag?.textColor}
         _hover={{
-         borderColor: props.tag.textColor,
+         borderColor: props.tag?.textColor,
         }}
        />
        <c.NumberDecrementStepper
-        borderColor={props.tag.textColor}
+        borderColor={props.tag?.textColor}
         _hover={{
-         borderColor: props.tag.textColor,
+         borderColor: props.tag?.textColor,
         }}
        />
       </c.NumberInputStepper>
@@ -80,24 +82,24 @@ const ExpenseTableRow = (props: ExpenseObject) => {
       placeholder="Expense Tag"
       name="tag"
       value={tagNameValue}
-      borderColor={props.tag.textColor}
+      borderColor={props.tag?.textColor}
       onChange={(e) => setTagNameValue(e.currentTarget.value)}
       _hover={{
-       borderColor: props.tag.textColor,
+       borderColor: props.tag?.textColor,
       }}
      >
       {generalContext.tags.map((t) => (
        <option
         value={t.name}
         key={crypto.randomUUID()}
-        style={{ borderColor: props.tag.textColor }}
+        style={{ borderColor: props.tag?.textColor }}
        >
         {t.name}
        </option>
       ))}
      </c.Select>
     ) : (
-     <c.Text>{props.tag.name}</c.Text>
+     <c.Text>{props.tag?.name || 'No Tag'}</c.Text>
     )}
    </c.Td>
    <c.Td>
@@ -107,9 +109,9 @@ const ExpenseTableRow = (props: ExpenseObject) => {
       name="description"
       value={descriptionValue}
       onChange={(e) => setDescriptionValue(e.currentTarget.value)}
-      borderColor={props.tag.textColor}
+      borderColor={props.tag?.textColor || 'black'}
       _hover={{
-       borderColor: props.tag.textColor,
+       borderColor: props.tag?.textColor,
       }}
      />
     ) : (

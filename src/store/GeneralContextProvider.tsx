@@ -123,6 +123,21 @@ const GeneralContextProvider: React.FC<{
     setSelectedDay,
     year,
     tags,
+    deleteTag(tagId) {
+     setTags((current) => current.filter((t) => t.id !== tagId));
+     setYear((current) => {
+      return current.map((month) => {
+       return month.map((d) => {
+        return {
+         ...d,
+         expenses: d.expenses.map((e) => {
+          return e.tag?.id === tagId ? { ...e, tag: null } : e;
+         }),
+        };
+       });
+      });
+     });
+    },
     deleteDayExpense(expenseId) {
      setYear((current) => {
       return current.map((month, monthId) => {
