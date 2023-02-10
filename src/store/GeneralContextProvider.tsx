@@ -1,5 +1,6 @@
 import GeneralContext, {
  DayObject,
+ ExpenseObject,
  MonthObject,
  TagObject,
 } from './GeneralContext';
@@ -19,72 +20,26 @@ function currentYearByMonth(tags: TagObject[]) {
 
   for (let j = 1; j <= daysInCurrMonth; j++) {
    const dayOfWeekIndex = (monthStart.getDay() + j - 1) % 7;
+   const expenses: ExpenseObject[] = [];
+   for (let n = 0; n < Math.trunc(Math.random() * 30); ++n) {
+    expenses.push({
+     amount: Number((Math.random() * 10).toFixed(2)),
+     id: crypto.randomUUID(),
+     description: 'N/A',
+     tag: tags[Math.floor(Math.random() * tags.length)],
+    });
+   }
    daysInCurrentMonth.push({
     id: crypto.randomUUID(),
     day: daysOfWeek[dayOfWeekIndex],
     monthDayIdx: j,
     monthIdx: i,
-    expenses: [
-     {
-      id: crypto.randomUUID(),
-      amount: 19.99,
-      description: 'standard description',
-      tag: tags[0],
-     },
-     {
-      id: crypto.randomUUID(),
-      amount: 15.0,
-      description: 'standard description',
-      tag: tags[1],
-     },
-     {
-      id: crypto.randomUUID(),
-      amount: 9.99,
-      description: 'standard description',
-      tag: tags[2],
-     },
-     {
-      id: crypto.randomUUID(),
-      amount: 19.99,
-      description: 'standard description',
-      tag: tags[0],
-     },
-     {
-      id: crypto.randomUUID(),
-      amount: 15.0,
-      description: 'standard description',
-      tag: tags[1],
-     },
-     {
-      id: crypto.randomUUID(),
-      amount: 9.99,
-      description: 'standard description',
-      tag: tags[2],
-     },
-     {
-      id: crypto.randomUUID(),
-      amount: 19.99,
-      description: 'standard description',
-      tag: tags[0],
-     },
-     {
-      id: crypto.randomUUID(),
-      amount: 15.0,
-      description: 'standard description',
-      tag: tags[1],
-     },
-     {
-      id: crypto.randomUUID(),
-      amount: 9.99,
-      description: 'standard description',
-      tag: tags[2],
-     },
-    ],
+    expenses,
    });
   }
 
   months.push({
-   monthBudget: Math.trunc(Math.random() * 6000),
+   monthBudget: Math.trunc(Math.random() * 3000),
    days: daysInCurrentMonth,
   });
  }
@@ -212,7 +167,12 @@ const GeneralContextProvider: React.FC<{
               ...day,
               expenses: [
                ...day.expenses,
-               { id: crypto.randomUUID(), tag, description, amount },
+               {
+                id: crypto.randomUUID(),
+                tag,
+                description: description || 'N/A',
+                amount,
+               },
               ],
              };
              setSelectedDay(newSelectedDay);

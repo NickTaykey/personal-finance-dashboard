@@ -31,6 +31,34 @@ const ExpenseTableRow = (props: ExpenseObject) => {
  return (
   <c.Tr backgroundColor={props.tag?.bgColor} color={props.tag?.textColor}>
    <c.Td>
+    <c.Flex justify="end">
+     {showEditingFields && (
+      <c.IconButton
+       mr="2"
+       color="black"
+       aria-label="save updates"
+       icon={<FaCheck />}
+       onClick={updateExpenseHandler}
+      />
+     )}
+     <c.IconButton
+      color="black"
+      aria-label={
+       showEditingFields ? 'close edit expense form' : 'open edit expense form'
+      }
+      icon={showEditingFields ? <FaTimes /> : <FaEdit />}
+      onClick={() => setShowEditingFields((c) => !c)}
+     />
+     <c.IconButton
+      ml="2"
+      color="black"
+      aria-label="delete expense"
+      icon={<FaTrash />}
+      onClick={deleteExpenseHandler}
+     />
+    </c.Flex>
+   </c.Td>
+   <c.Td>
     {showEditingFields ? (
      <c.NumberInput
       defaultValue={15}
@@ -117,34 +145,6 @@ const ExpenseTableRow = (props: ExpenseObject) => {
     ) : (
      <c.Text>{props.description}</c.Text>
     )}
-   </c.Td>
-   <c.Td>
-    <c.Flex justify="end">
-     {showEditingFields && (
-      <c.IconButton
-       mr="2"
-       color="black"
-       aria-label="save updates"
-       icon={<FaCheck />}
-       onClick={updateExpenseHandler}
-      />
-     )}
-     <c.IconButton
-      color="black"
-      aria-label={
-       showEditingFields ? 'close edit expense form' : 'open edit expense form'
-      }
-      icon={showEditingFields ? <FaTimes /> : <FaEdit />}
-      onClick={() => setShowEditingFields((c) => !c)}
-     />
-     <c.IconButton
-      ml="2"
-      color="black"
-      aria-label="delete expense"
-      icon={<FaTrash />}
-      onClick={deleteExpenseHandler}
-     />
-    </c.Flex>
    </c.Td>
   </c.Tr>
  );

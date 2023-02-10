@@ -47,7 +47,11 @@ const MonthCard = (props: MonthCardProps) => {
     Budget: {amountSpent.toFixed()}
    </c.Heading>
    <c.Flex alignItems="center">
-    {currentMonth.monthBudget - amountSpent > 0 ? <FaPlus /> : <FaMinus />}
+    {currentMonth.monthBudget - amountSpent > 0 ? (
+     <strong>+</strong>
+    ) : (
+     <strong>-</strong>
+    )}
     <c.Heading fontSize="lg">
      {Math.abs(currentMonth.monthBudget - amountSpent).toFixed(2)}
     </c.Heading>

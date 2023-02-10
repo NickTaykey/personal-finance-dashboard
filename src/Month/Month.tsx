@@ -90,9 +90,10 @@ const Month = () => {
                 : 'transparent',
              }}
             >
-             <c.Text mr="2">
-              {monthDayIdx++} {day.day}
-             </c.Text>
+             <c.Box mr="3">
+              <c.Text>{monthDayIdx++}</c.Text>
+              <c.Text>{day.day}</c.Text>
+             </c.Box>
              <c.Box _hover={{ cursor: 'pointer' }}>
               <FaExpandArrowsAlt onClick={monthTableClickHandlerFactory(day)} />
              </c.Box>
