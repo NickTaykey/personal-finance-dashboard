@@ -1,7 +1,7 @@
 import GeneralContext, { DayObject } from '../store/GeneralContext';
-import { FaExpandArrowsAlt, FaTags } from 'react-icons/fa';
+import { FaArrowLeft, FaExpandArrowsAlt, FaTags } from 'react-icons/fa';
+import { useParams, useNavigate } from 'react-router-dom';
 import { monthNameToNumber } from '../helpers';
-import { useParams } from 'react-router-dom';
 import TagsDrawer from '../Tag/TagsDrawer';
 import MonthBalance from './MonthBalance';
 import DayModal from '../Day/DayModal';
@@ -19,6 +19,7 @@ function divideArray(array: DayObject[]) {
 }
 
 const Month = () => {
+ const navigate = useNavigate();
  const {
   isOpen: isModalOpen,
   onOpen: onModalOpen,
@@ -59,8 +60,15 @@ const Month = () => {
    <>
     <TagsDrawer isOpen={isDrawerOpen} onClose={onDrawerClose} />
     <c.Box m="5">
-     <c.Flex justify="start">
-      <c.Heading textTransform="uppercase" mr="3">
+     <c.Flex justify="start" alignItems="center">
+      <c.IconButton
+       onClick={() => navigate('/')}
+       fontSize="2xl"
+       bgColor="transparent"
+       icon={<FaArrowLeft />}
+       aria-label="Go back home"
+      />
+      <c.Heading textTransform="uppercase" mx="3">
        {monthName}
       </c.Heading>
       <c.IconButton

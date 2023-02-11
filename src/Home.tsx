@@ -1,9 +1,11 @@
+import GeneralContext from './store/GeneralContext';
+import { AiTwotoneFire } from 'react-icons/ai';
+import { MdSavings } from 'react-icons/md';
+import MonthCard from './Month/MonthCard';
 import TagsDrawer from './Tag/TagsDrawer';
 import { FaTags } from 'react-icons/fa';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
-import GeneralContext from './store/GeneralContext';
-import MonthCard from './Month/MonthCard';
 
 const Home = () => {
  const { isOpen, onOpen, onClose } = c.useDisclosure();
@@ -27,8 +29,6 @@ const Home = () => {
   { spent: 0, saved: 0, excessiveSpending: 0, budget: 0 }
  );
 
- console.log(totYear);
-
  const date = new Date();
 
  return (
@@ -45,23 +45,18 @@ const Home = () => {
      />
     </c.Flex>
     <c.Box my="3" textAlign="left">
-     <c.Text fontSize="lg">Tot. budget: {totYear.budget.toFixed(2)}</c.Text>
-     <c.Text fontSize="lg">Tot. spent: {totYear.spent.toFixed(2)}</c.Text>
-     <c.Text fontSize="lg">
-      Avg. spent per month: {(totYear.spent / 12).toFixed(2)}
-     </c.Text>
-     {totYear.saved - Math.abs(totYear.excessiveSpending) > 0 && (
-      <>
-       <c.Text fontSize="lg">
-        Tot. saved:{' '}
-        {(totYear.saved - Math.abs(totYear.excessiveSpending)).toFixed(2)}{' '}
-        (minus exessive spending)
-       </c.Text>
-       <c.Text fontSize="lg">
-        Avg. saved per month: {(totYear.saved / 12).toFixed(2)}
-       </c.Text>
-      </>
-     )}
+     <c.Flex fontSize="2xl" alignItems="center">
+      <MdSavings />{' '}
+      <c.Text ml="2" letterSpacing="wider">
+       € {totYear.budget.toFixed(2)}
+      </c.Text>
+     </c.Flex>
+     <c.Flex fontSize="2xl" alignItems="center">
+      <AiTwotoneFire />{' '}
+      <c.Text ml="2" letterSpacing="wider">
+       € {totYear.spent.toFixed(2)}
+      </c.Text>
+     </c.Flex>
     </c.Box>
     <c.SimpleGrid
      columns={[1, null, 3]}

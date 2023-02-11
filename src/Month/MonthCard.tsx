@@ -1,6 +1,6 @@
-import { FaPlus, FaMinus, FaExternalLinkAlt } from 'react-icons/fa';
 import type { DayObject } from '../store/GeneralContext';
 import GeneralContext from '../store/GeneralContext';
+import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import { getMonthName } from '../helpers';
 import * as c from '@chakra-ui/react';

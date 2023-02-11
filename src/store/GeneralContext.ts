@@ -2,15 +2,14 @@ import React from 'react';
 
 export interface TagObject {
  id: string;
- name: string;
+ tagName: string;
  bgColor: string;
  textColor: string;
 }
 
 export interface ExpenseObject {
  amount: number;
- tag: TagObject | null;
- description?: string;
+ tagId: string | null;
  id: string;
 }
 
@@ -27,13 +26,19 @@ export interface DayObject {
  id: string;
 }
 
+interface TagPropertiesObject {
+ tagName: string;
+ bgColor: string;
+}
+
 interface GeneralContextObject {
- addDayExpense(amount: number, tag: TagObject, description?: string): void;
+ addDayExpense(amount: number, tagId: string | null): void;
  updateDayExpense(newExpense: ExpenseObject): void;
  deleteDayExpense(expenseId: string): void;
  setSelectedDay(day: DayObject | null): void;
  selectedDay: DayObject | null;
- newTag(tag: { name: string; bgColor: string; textColor: string }): void;
+ newTag(tag: TagPropertiesObject): void;
+ updateTag(tadId: string, newTag: TagPropertiesObject): void;
  deleteTag(tadId: string): void;
  updateBudget(monthIdx: number, newBudget: number): void;
  year: MonthObject[];
@@ -41,13 +46,14 @@ interface GeneralContextObject {
 }
 
 const GeneralContext = React.createContext<GeneralContextObject>({
- addDayExpense(amount, tag, description) {},
+ addDayExpense(amount, tag) {},
  updateDayExpense(newExpense) {},
  deleteDayExpense(expenseId) {},
- setSelectedDay(day: DayObject | null) {},
+ setSelectedDay(day) {},
  selectedDay: null,
  newTag(tag) {},
- deleteTag(tadId: string) {},
+ updateTag(tadId, newTwag) {},
+ deleteTag(tadId) {},
  updateBudget(monthIdx, newBudget) {},
  year: [],
  tags: [],

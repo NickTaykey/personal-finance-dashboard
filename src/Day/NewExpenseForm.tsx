@@ -6,20 +6,18 @@ const NewExpenseForm = () => {
  const generalContext = useContext(GeneralContext);
  const [errorMessage, setErrorMessage] = useState<string | null>(null);
  const [amountValue, setAmountValue] = useState<number>(0);
- const [descriptionValue, setDescriptionValue] = useState<string>('');
  const [tagNameValue, setTagNameValue] = useState<string>('');
 
  const addNewExpenseHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-  const tag = generalContext.tags.find((t) => tagNameValue === t.name);
+  const tag = generalContext.tags.find((t) => tagNameValue === t.tagName);
 
   if (!tag) {
    setErrorMessage('Invalid Expense Tag');
   } else if (!amountValue || isNaN(amountValue)) {
    setErrorMessage('Invalid Expense Amount');
   } else {
-   generalContext.addDayExpense(amountValue, tag, descriptionValue);
+   generalContext.addDayExpense(amountValue, tag.id);
    setErrorMessage(null);
-   setDescriptionValue('');
    setTagNameValue('');
    setAmountValue(0);
   }
@@ -65,21 +63,11 @@ const NewExpenseForm = () => {
        value={tagNameValue}
       >
        {generalContext.tags.map((t) => (
-        <option value={t.name} key={crypto.randomUUID()}>
-         {t.name}
+        <option value={t.tagName} key={crypto.randomUUID()}>
+         {t.tagName}
         </option>
        ))}
       </c.Select>
-     </c.FormControl>
-     <c.FormControl mb="3">
-      <c.FormLabel>Expense Description</c.FormLabel>
-      <c.Input
-       type="text"
-       name="description"
-       value={descriptionValue}
-       onChange={(e) => setDescriptionValue(e.currentTarget.value)}
-      />
-      <c.FormHelperText>Optional</c.FormHelperText>
      </c.FormControl>
      <c.Button colorScheme="green" width="100%" onClick={addNewExpenseHandler}>
       Add

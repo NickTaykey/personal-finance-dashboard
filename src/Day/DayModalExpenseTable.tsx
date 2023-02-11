@@ -9,10 +9,13 @@ const DayModalExpenseTable = () => {
   <c.Table>
    <c.Thead>
     <c.Tr>
-     <c.Th></c.Th>
-     <c.Th>Amout</c.Th>
-     <c.Th>Label</c.Th>
-     <c.Th>Descrition?</c.Th>
+     <c.Th p="0" py="2">
+      Amout
+     </c.Th>
+     <c.Th p="0" py="2">
+      Tag
+     </c.Th>
+     <c.Th p="0" py="2"></c.Th>
     </c.Tr>
    </c.Thead>
    <c.Tbody>

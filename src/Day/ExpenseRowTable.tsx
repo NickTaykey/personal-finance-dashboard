@@ -4,22 +4,22 @@ import { useState, useContext } from 'react';
 import * as c from '@chakra-ui/react';
 
 const ExpenseTableRow = (props: ExpenseObject) => {
- const [descriptionValue, setDescriptionValue] = useState<string>(
-  props.description || ''
+ const generalContext = useContext(GeneralContext);
+ const currentTag =
+  generalContext.tags.find((t) => t.id === props.tagId) || null;
+
+ const [tagIdValue, setTagIdValue] = useState<string>(
+  currentTag?.tagName || ''
  );
- const [tagNameValue, setTagNameValue] = useState<string>(
-  props.tag?.name || ''
- );
+
  const [amountValue, setAmountValue] = useState<number>(props.amount);
  const [showEditingFields, setShowEditingFields] = useState(false);
- const generalContext = useContext(GeneralContext);
 
  const updateExpenseHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
   generalContext.updateDayExpense({
    ...props,
    amount: amountValue,
-   description: descriptionValue,
-   tag: generalContext.tags.find((t) => t.name === tagNameValue)!,
+   tagId: tagIdValue,
   });
   setShowEditingFields(false);
  };
@@ -29,8 +29,79 @@ const ExpenseTableRow = (props: ExpenseObject) => {
  };
 
  return (
-  <c.Tr backgroundColor={props.tag?.bgColor} color={props.tag?.textColor}>
-   <c.Td>
+  <c.Tr
+   backgroundColor={currentTag?.bgColor || 'transparent'}
+   color={currentTag?.textColor || 'black'}
+  >
+   <c.Td p="0" px="2" py="2">
+    {showEditingFields ? (
+     <c.NumberInput
+      defaultValue={15}
+      precision={2}
+      step={0.01}
+      value={amountValue}
+      onChange={(_, amount) => {
+       if (amount && !isNaN(amount)) setAmountValue(amount);
+      }}
+      borderColor={currentTag?.textColor}
+      _hover={{
+       borderColor: currentTag?.textColor,
+      }}
+     >
+      <c.NumberInputField
+       name="amount"
+       borderColor={currentTag?.textColor}
+       _hover={{
+        borderColor: currentTag?.textColor,
+       }}
+      />
+      <c.NumberInputStepper
+       borderColor={currentTag?.textColor}
+       _hover={{
+        borderColor: currentTag?.textColor,
+       }}
+      >
+       <c.NumberIncrementStepper
+        borderColor={currentTag?.textColor}
+        _hover={{
+         borderColor: currentTag?.textColor,
+        }}
+       />
+       <c.NumberDecrementStepper
+        borderColor={currentTag?.textColor}
+        _hover={{
+         borderColor: currentTag?.textColor,
+        }}
+       />
+      </c.NumberInputStepper>
+     </c.NumberInput>
+    ) : (
+     <c.Text>{props.amount}</c.Text>
+    )}
+   </c.Td>
+   <c.Td p="0" py="2" pl="2">
+    {showEditingFields ? (
+     <c.Select
+      onChange={(e) => setTagIdValue(e.currentTarget.value)}
+      borderColor={currentTag?.textColor || 'black'}
+      placeholder="Expense Tag"
+      value={tagIdValue}
+      name="tag"
+      _hover={{
+       borderColor: currentTag?.textColor || 'black',
+      }}
+     >
+      {generalContext.tags.map((t) => (
+       <option value={t.id} key={crypto.randomUUID()}>
+        {t.tagName}
+       </option>
+      ))}
+     </c.Select>
+    ) : (
+     <c.Text>{currentTag?.tagName || 'No Tag'}</c.Text>
+    )}
+   </c.Td>
+   <c.Td p="0" py="2" pr="2">
     <c.Flex justify="end">
      {showEditingFields && (
       <c.IconButton
@@ -57,94 +128,6 @@ const ExpenseTableRow = (props: ExpenseObject) => {
       onClick={deleteExpenseHandler}
      />
     </c.Flex>
-   </c.Td>
-   <c.Td>
-    {showEditingFields ? (
-     <c.NumberInput
-      defaultValue={15}
-      precision={2}
-      step={0.01}
-      value={amountValue}
-      onChange={(_, amount) => {
-       if (amount && !isNaN(amount)) setAmountValue(amount);
-      }}
-      borderColor={props.tag?.textColor}
-      _hover={{
-       borderColor: props.tag?.textColor,
-      }}
-     >
-      <c.NumberInputField
-       name="amount"
-       borderColor={props.tag?.textColor}
-       _hover={{
-        borderColor: props.tag?.textColor,
-       }}
-      />
-      <c.NumberInputStepper
-       borderColor={props.tag?.textColor}
-       _hover={{
-        borderColor: props.tag?.textColor,
-       }}
-      >
-       <c.NumberIncrementStepper
-        borderColor={props.tag?.textColor}
-        _hover={{
-         borderColor: props.tag?.textColor,
-        }}
-       />
-       <c.NumberDecrementStepper
-        borderColor={props.tag?.textColor}
-        _hover={{
-         borderColor: props.tag?.textColor,
-        }}
-       />
-      </c.NumberInputStepper>
-     </c.NumberInput>
-    ) : (
-     <c.Text>{props.amount}</c.Text>
-    )}
-   </c.Td>
-   <c.Td>
-    {showEditingFields ? (
-     <c.Select
-      placeholder="Expense Tag"
-      name="tag"
-      value={tagNameValue}
-      borderColor={props.tag?.textColor}
-      onChange={(e) => setTagNameValue(e.currentTarget.value)}
-      _hover={{
-       borderColor: props.tag?.textColor,
-      }}
-     >
-      {generalContext.tags.map((t) => (
-       <option
-        value={t.name}
-        key={crypto.randomUUID()}
-        style={{ borderColor: props.tag?.textColor }}
-       >
-        {t.name}
-       </option>
-      ))}
-     </c.Select>
-    ) : (
-     <c.Text>{props.tag?.name || 'No Tag'}</c.Text>
-    )}
-   </c.Td>
-   <c.Td>
-    {showEditingFields ? (
-     <c.Input
-      type="text"
-      name="description"
-      value={descriptionValue}
-      onChange={(e) => setDescriptionValue(e.currentTarget.value)}
-      borderColor={props.tag?.textColor || 'black'}
-      _hover={{
-       borderColor: props.tag?.textColor,
-      }}
-     />
-    ) : (
-     <c.Text>{props.description}</c.Text>
-    )}
    </c.Td>
   </c.Tr>
  );

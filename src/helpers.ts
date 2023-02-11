@@ -16,14 +16,17 @@ export function getMonthName(monthNum: number) {
  return monthNames[monthNum];
 }
 
-export function isColorDark(color: string) {
- const [r, g, b] = color
-  .substring(color.indexOf('(') + 1, color.length - 1)
-  .split(', ')
-  .map((n) => Number(n));
- const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
- if (luma < 140) return true;
- return false;
+function hexToRgb(hex: string) {
+ const r = parseInt(hex.substring(1, 3), 16);
+ const g = parseInt(hex.substring(3, 5), 16);
+ const b = parseInt(hex.substring(5, 7), 16);
+ return [r, g, b];
+}
+
+export function isColorDark(hex: string) {
+ const rgb = hexToRgb(hex);
+ const brightness = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+ return brightness < 128;
 }
 
 export function monthNameToNumber(month: string) {
