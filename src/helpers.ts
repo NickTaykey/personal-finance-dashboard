@@ -59,3 +59,24 @@ export function monthNameToNumber(month: string) {
    return -1;
  }
 }
+
+export type TagExpensesArray = {
+ x: number;
+ y: number;
+ label: string;
+}[];
+
+export function findNumOfExpensesLastDay(arr: TagExpensesArray) {
+ let maxValue = arr[arr.length - 1].x;
+ let count = 1;
+
+ for (let i = arr.length - 1; i >= 0; i--) {
+  if (arr[i].x === maxValue) {
+   count++;
+  } else {
+   break;
+  }
+ }
+
+ return count;
+}

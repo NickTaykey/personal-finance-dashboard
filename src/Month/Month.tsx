@@ -1,5 +1,6 @@
-import GeneralContext, { DayObject } from '../store/GeneralContext';
 import { FaArrowLeft, FaExpandArrowsAlt, FaTags } from 'react-icons/fa';
+import GeneralContext, { DayObject } from '../store/GeneralContext';
+import MonthExpensesBarCharts from './MonthExpensesBarCharts';
 import MonthExpensesByChart from './MonthExpensesPieChart';
 import { useParams, useNavigate } from 'react-router-dom';
 import { monthNameToNumber } from '../helpers';
@@ -75,7 +76,7 @@ const Month = () => {
     };
    };
 
-   let monthDayIdx = 1;
+   let monthDayNumber = 1;
    markup = (
     <>
      <TagsDrawer isOpen={isDrawerOpen} onClose={onDrawerClose} />
@@ -115,13 +116,13 @@ const Month = () => {
                padding: '1rem',
                backgroundColor:
                 currentMonthIdx === selectedMonthIdx &&
-                currentDay === monthDayIdx
+                currentDay === monthDayNumber
                  ? 'coral'
                  : 'transparent',
               }}
              >
               <c.Box mr="3">
-               <c.Text>{monthDayIdx++}</c.Text>
+               <c.Text>{monthDayNumber++}</c.Text>
                <c.Text>{day.day}</c.Text>
               </c.Box>
               <c.Box _hover={{ cursor: 'pointer' }}>
@@ -138,6 +139,7 @@ const Month = () => {
        </c.Flex>
        <MonthExpensesByChart monthObject={monthObject} />
       </c.Flex>
+      <MonthExpensesBarCharts monthObject={monthObject} />
      </c.Box>
      {generalContext.selectedDay && isModalOpen && (
       <DayModal isOpen={isModalOpen} onClose={onModalClose} />

@@ -20,7 +20,7 @@ export interface MonthObject {
 
 export interface DayObject {
  expenses: ExpenseObject[];
- monthDayIdx: number;
+ monthDayNumber: number;
  monthIdx: number;
  day: string;
  id: string;

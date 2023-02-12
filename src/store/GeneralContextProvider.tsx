@@ -34,7 +34,7 @@ function genRandomYearData(tags: TagObject[]) {
    daysInCurrentMonth.push({
     id: crypto.randomUUID(),
     day: daysOfWeek[dayOfWeekIndex],
-    monthDayIdx: j,
+    monthDayNumber: j,
     monthIdx: i,
     expenses,
    });

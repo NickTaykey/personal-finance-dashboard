@@ -8,6 +8,7 @@ interface MonthExpensesByChartProps {
 }
 
 const MonthExpensesByChart = (props: MonthExpensesByChartProps) => {
+ const [isLargerThan500] = c.useMediaQuery('(min-width: 500px)');
  const generalContext = useContext(GeneralContext);
 
  const expensesByTagPieChartData = generalContext.tags.map((tag) => {
@@ -22,14 +23,24 @@ const MonthExpensesByChart = (props: MonthExpensesByChartProps) => {
  });
 
  return (
-  <c.Flex flexGrow="2" justify="center" alignItems="center">
-   <VictoryPie
-    colorScale={generalContext.tags.map((t) => t.bgColor)}
-    data={expensesByTagPieChartData}
-    width={600}
-    height={400}
-    labelComponent={<VictoryLabel style={{ fontSize: 20 }} />}
-   />
+  <c.Flex
+   flexDirection="column"
+   justifyContent="center"
+   alignItems="center"
+   w={isLargerThan500 ? '50%' : '100%'}
+  >
+   <c.Text fontSize="md" fontWeight="medium" textAlign="center">
+    Distribution of Expenses by Tag
+   </c.Text>
+   <c.Flex flexGrow="2" justify="center" alignItems="center">
+    <VictoryPie
+     colorScale={generalContext.tags.map((t) => t.bgColor)}
+     data={expensesByTagPieChartData}
+     width={600}
+     height={400}
+     labelComponent={<VictoryLabel style={{ fontSize: 20 }} />}
+    />
+   </c.Flex>
   </c.Flex>
  );
 };

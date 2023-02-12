@@ -18,7 +18,7 @@ const DayModal = (props: DayModalProps) => {
    <c.ModalContent>
     <c.ModalHeader>
      Daily Expenses - {generalContext.selectedDay!.day}{' '}
-     {generalContext.selectedDay!.monthDayIdx + 1} of{' '}
+     {generalContext.selectedDay!.monthDayNumber} of{' '}
      {getMonthName(generalContext.selectedDay!.monthIdx)}
     </c.ModalHeader>
     <c.ModalCloseButton />
