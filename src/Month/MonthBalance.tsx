@@ -32,7 +32,7 @@ const MonthBalance = (props: MonthBalanceProps) => {
  };
 
  return (
-  <c.Flex mt="5" direction="column">
+  <c.Flex mt="5" direction="column" m="5">
    <c.HStack alignItems="center" spacing="4">
     <c.Heading size="md" textAlign="left">
      Spent: {amountSpent.toFixed(2)}

@@ -33,7 +33,7 @@ const ExpenseTableRow = (props: ExpenseObject) => {
    backgroundColor={currentTag?.bgColor || 'transparent'}
    color={currentTag?.textColor || 'black'}
   >
-   <c.Td p="0" px="2" py="2">
+   <c.Td p="0" px="2" py="2" w="30%">
     {showEditingFields ? (
      <c.NumberInput
       defaultValue={15}
@@ -63,12 +63,14 @@ const ExpenseTableRow = (props: ExpenseObject) => {
       >
        <c.NumberIncrementStepper
         borderColor={currentTag?.textColor}
+        color={currentTag?.textColor}
         _hover={{
          borderColor: currentTag?.textColor,
         }}
        />
        <c.NumberDecrementStepper
         borderColor={currentTag?.textColor}
+        color={currentTag?.textColor}
         _hover={{
          borderColor: currentTag?.textColor,
         }}
@@ -80,53 +82,57 @@ const ExpenseTableRow = (props: ExpenseObject) => {
     )}
    </c.Td>
    <c.Td p="0" py="2" pl="2">
-    {showEditingFields ? (
-     <c.Select
-      onChange={(e) => setTagIdValue(e.currentTarget.value)}
-      borderColor={currentTag?.textColor || 'black'}
-      placeholder="Expense Tag"
-      value={tagIdValue}
-      name="tag"
-      _hover={{
-       borderColor: currentTag?.textColor || 'black',
-      }}
-     >
-      {generalContext.tags.map((t) => (
-       <option value={t.id} key={crypto.randomUUID()}>
-        {t.tagName}
-       </option>
-      ))}
-     </c.Select>
-    ) : (
-     <c.Text>{currentTag?.tagName || 'No Tag'}</c.Text>
-    )}
+    <c.Flex justify="center">
+     {showEditingFields ? (
+      <c.Select
+       onChange={(e) => setTagIdValue(e.currentTarget.value)}
+       borderColor={currentTag?.textColor || 'black'}
+       placeholder="Expense Tag"
+       value={tagIdValue}
+       name="tag"
+       _hover={{
+        borderColor: currentTag?.textColor || 'black',
+       }}
+      >
+       {generalContext.tags.map((t) => (
+        <option value={t.id} key={crypto.randomUUID()}>
+         {t.tagName}
+        </option>
+       ))}
+      </c.Select>
+     ) : (
+      <c.Text>{currentTag?.tagName || 'No Tag'}</c.Text>
+     )}
+    </c.Flex>
    </c.Td>
    <c.Td p="0" py="2" pr="2">
     <c.Flex justify="end">
-     {showEditingFields && (
-      <c.IconButton
-       mr="2"
-       color="black"
-       aria-label="save updates"
-       icon={<FaCheck />}
-       onClick={updateExpenseHandler}
-      />
-     )}
      <c.IconButton
       color="black"
       aria-label={
        showEditingFields ? 'close edit expense form' : 'open edit expense form'
       }
+      ml="1"
       icon={showEditingFields ? <FaTimes /> : <FaEdit />}
       onClick={() => setShowEditingFields((c) => !c)}
      />
-     <c.IconButton
-      ml="2"
-      color="black"
-      aria-label="delete expense"
-      icon={<FaTrash />}
-      onClick={deleteExpenseHandler}
-     />
+     {showEditingFields ? (
+      <c.IconButton
+       ml="1"
+       color="black"
+       aria-label="save updates"
+       icon={<FaCheck />}
+       onClick={updateExpenseHandler}
+      />
+     ) : (
+      <c.IconButton
+       ml="2"
+       color="black"
+       aria-label="delete expense"
+       icon={<FaTrash />}
+       onClick={deleteExpenseHandler}
+      />
+     )}
     </c.Flex>
    </c.Td>
   </c.Tr>

@@ -1,5 +1,6 @@
 import GeneralContext, { DayObject } from '../store/GeneralContext';
 import { FaArrowLeft, FaExpandArrowsAlt, FaTags } from 'react-icons/fa';
+import MonthExpensesByChart from './MonthExpensesPieChart';
 import { useParams, useNavigate } from 'react-router-dom';
 import { monthNameToNumber } from '../helpers';
 import TagsDrawer from '../Tag/TagsDrawer';
@@ -20,6 +21,7 @@ function divideArray(array: DayObject[]) {
 
 const Month = () => {
  const navigate = useNavigate();
+
  const {
   isOpen: isModalOpen,
   onOpen: onModalOpen,
@@ -33,7 +35,23 @@ const Month = () => {
  const generalContext = useContext(GeneralContext);
  const { month: monthName } = useParams();
 
- let markup = <div>Month not valid</div>;
+ let markup = (
+  <c.Flex
+   w="100vw"
+   h="100vh"
+   justify="center"
+   alignItems="center"
+   direction="column"
+  >
+   <c.Spinner
+    thickness="4px"
+    speed="0.65s"
+    emptyColor="gray.200"
+    color="blue.500"
+    size="xl"
+   />
+  </c.Flex>
+ );
 
  if (
   monthName &&
@@ -41,84 +59,105 @@ const Month = () => {
   monthNameToNumber(monthName) !== -1
  ) {
   const selectedMonthIdx = monthNameToNumber(monthName) - 1;
-  const monthObject = generalContext.year[selectedMonthIdx];
-  const date = new Date();
-  const currentMonthIdx = date.getMonth();
-  const currentDay = date.getDate();
+  if (selectedMonthIdx >= 0) {
+   const monthObject = generalContext.year[selectedMonthIdx];
 
-  const tableRows = divideArray(monthObject.days);
+   const date = new Date();
+   const currentMonthIdx = date.getMonth();
+   const currentDay = date.getDate();
 
-  const monthTableClickHandlerFactory = (clickedDay: DayObject) => {
-   return (e: React.MouseEvent<SVGElement>) => {
-    generalContext.setSelectedDay(clickedDay);
-    onModalOpen();
+   const tableRows = divideArray(monthObject.days);
+
+   const monthTableClickHandlerFactory = (clickedDay: DayObject) => {
+    return (e: React.MouseEvent<SVGElement>) => {
+     generalContext.setSelectedDay(clickedDay);
+     onModalOpen();
+    };
    };
-  };
 
-  let monthDayIdx = 1;
-  markup = (
-   <>
-    <TagsDrawer isOpen={isDrawerOpen} onClose={onDrawerClose} />
-    <c.Box m="5">
-     <c.Flex justify="start" alignItems="center">
-      <c.IconButton
-       onClick={() => navigate('/')}
-       fontSize="2xl"
-       bgColor="transparent"
-       icon={<FaArrowLeft />}
-       aria-label="Go back home"
-      />
-      <c.Heading textTransform="uppercase" mx="3">
-       {monthName}
-      </c.Heading>
-      <c.IconButton
-       colorScheme="telegram"
-       onClick={onDrawerOpen}
-       aria-label="Open tags menu"
-       icon={<FaTags />}
-      />
-     </c.Flex>
-     <MonthBalance currentMonthIdx={currentMonthIdx} />
-     <c.Box mt="5" width="50%">
-      <c.Flex justifyContent="space-between">
-       {tableRows.map((row, rowIdx) => {
-        return (
-         <c.Flex direction="column" key={rowIdx}>
-          {row.map((day, colIdx) => (
-           <c.Box key={`${rowIdx}-${colIdx}`}>
-            {colIdx === 0 && <c.Box fontWeight="bold">Week {rowIdx + 1}</c.Box>}
-            <c.Flex
-             alignItems="center"
-             style={{
-              padding: '1rem',
-              backgroundColor:
-               currentMonthIdx === selectedMonthIdx &&
-               currentDay === monthDayIdx
-                ? 'coral'
-                : 'transparent',
-             }}
-            >
-             <c.Box mr="3">
-              <c.Text>{monthDayIdx++}</c.Text>
-              <c.Text>{day.day}</c.Text>
-             </c.Box>
-             <c.Box _hover={{ cursor: 'pointer' }}>
-              <FaExpandArrowsAlt onClick={monthTableClickHandlerFactory(day)} />
-             </c.Box>
-            </c.Flex>
-           </c.Box>
-          ))}
-         </c.Flex>
-        );
-       })}
+   let monthDayIdx = 1;
+   markup = (
+    <>
+     <TagsDrawer isOpen={isDrawerOpen} onClose={onDrawerClose} />
+     <c.Box m="5" w="90%">
+      <c.Flex justify="start" alignItems="center">
+       <c.IconButton
+        onClick={() => navigate('/')}
+        fontSize="2xl"
+        bgColor="transparent"
+        icon={<FaArrowLeft />}
+        aria-label="Go back home"
+       />
+       <c.Heading textTransform="uppercase" mx="3">
+        {monthName}
+       </c.Heading>
+       <c.IconButton
+        colorScheme="telegram"
+        onClick={onDrawerOpen}
+        aria-label="Open tags menu"
+        icon={<FaTags />}
+       />
+      </c.Flex>
+      <MonthBalance currentMonthIdx={currentMonthIdx} />
+      <c.Flex mt="3" direction={['column', 'row']}>
+       <c.Flex justifyContent="space-between" flexGrow="4" mr="5">
+        {tableRows.map((row, rowIdx) => {
+         return (
+          <c.Flex direction="column" key={rowIdx}>
+           {row.map((day, colIdx) => (
+            <c.Box key={`${rowIdx}-${colIdx}`}>
+             {colIdx === 0 && (
+              <c.Box fontWeight="bold">Week {rowIdx + 1}</c.Box>
+             )}
+             <c.Flex
+              alignItems="center"
+              style={{
+               padding: '1rem',
+               backgroundColor:
+                currentMonthIdx === selectedMonthIdx &&
+                currentDay === monthDayIdx
+                 ? 'coral'
+                 : 'transparent',
+              }}
+             >
+              <c.Box mr="3">
+               <c.Text>{monthDayIdx++}</c.Text>
+               <c.Text>{day.day}</c.Text>
+              </c.Box>
+              <c.Box _hover={{ cursor: 'pointer' }}>
+               <FaExpandArrowsAlt
+                onClick={monthTableClickHandlerFactory(day)}
+               />
+              </c.Box>
+             </c.Flex>
+            </c.Box>
+           ))}
+          </c.Flex>
+         );
+        })}
+       </c.Flex>
+       <MonthExpensesByChart monthObject={monthObject} />
       </c.Flex>
      </c.Box>
-    </c.Box>
-    {generalContext.selectedDay && isModalOpen && (
-     <DayModal isOpen={isModalOpen} onClose={onModalClose} />
-    )}
-   </>
-  );
+     {generalContext.selectedDay && isModalOpen && (
+      <DayModal isOpen={isModalOpen} onClose={onModalClose} />
+     )}
+    </>
+   );
+  } else {
+   markup = (
+    <c.Flex
+     w="100vw"
+     h="100vh"
+     justify="center"
+     alignItems="center"
+     direction="column"
+    >
+     <c.Heading fontSize="5xl">404</c.Heading>
+     <c.Heading fontSize="2xl">Invalid month name</c.Heading>
+    </c.Flex>
+   );
+  }
  }
 
  return markup;
