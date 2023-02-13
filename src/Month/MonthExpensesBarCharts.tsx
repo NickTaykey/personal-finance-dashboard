@@ -1,3 +1,4 @@
+import MonthDaysCompositionBarChart from './MonthDaysCompositionBarChart';
 import MonthExpensesByTagBarChart from './MonthExpensesByTagBarChart';
 import MonthExpensesBarChart from './MonthExpensesBarChart';
 import { MonthObject } from '../store/GeneralContext';
@@ -11,13 +12,14 @@ const MonthExpensesBarCharts = (props: MonthExpensesByTagBarChartProps) => {
  return (
   <c.Flex
    mt="5"
-   width={['100%', '90%']}
+   width={['100%', '100%']}
    height={['100vh', '45vh']}
    flexDirection={['column', 'row']}
    ml={['0', '5']}
   >
    <MonthExpensesByTagBarChart monthObject={props.monthObject} />
    <MonthExpensesBarChart monthObject={props.monthObject} />
+   <MonthDaysCompositionBarChart monthObject={props.monthObject} />
   </c.Flex>
  );
 };

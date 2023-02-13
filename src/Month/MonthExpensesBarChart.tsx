@@ -1,9 +1,5 @@
-import {
- findNumOfExpensesLastDay,
- TagExpensesArray,
- getMonthName,
-} from '../helpers';
 import { VictoryChart, VictoryBar, VictoryTooltip } from 'victory';
+import { TagExpensesArray, getMonthName } from '../helpers';
 import { MonthObject } from '../store/GeneralContext';
 import * as c from '@chakra-ui/react';
 
@@ -20,7 +16,7 @@ const MonthExpensesBarChart = (props: MonthExpensesByBarChartProps) => {
    ...acm,
    {
     y: totSpentCurrentDay,
-    x: day.monthDayNumber + 1,
+    x: day.monthDayNumber,
     label: `€${totSpentCurrentDay.toFixed(2)} ${
      day.monthDayNumber
     } ${getMonthName(day.monthIdx)}`,
@@ -29,17 +25,21 @@ const MonthExpensesBarChart = (props: MonthExpensesByBarChartProps) => {
  }, [] as TagExpensesArray);
 
  console.log(monthExpenses);
- console.log(findNumOfExpensesLastDay(monthExpenses));
 
  return (
-  <c.Box flexGrow="1" mt={[10, 0]}>
+  <c.Flex
+   justifyContent="space-between"
+   flexDirection="column"
+   flexGrow="1"
+   mt={[10, 0]}
+  >
    <c.Heading fontSize="md" fontWeight="medium" textAlign="center">
     General Daily Expense Trend
    </c.Heading>
    <VictoryChart>
     <VictoryBar
      domain={{
-      x: [1, monthExpenses.length + findNumOfExpensesLastDay(monthExpenses)],
+      x: [1, monthExpenses.length + 1],
       y: [
        0,
        monthExpenses.reduce((acm, exp) => (acm > exp.y ? acm : exp.y), 0),
@@ -51,7 +51,7 @@ const MonthExpensesBarChart = (props: MonthExpensesByBarChartProps) => {
      data={monthExpenses}
     />
    </VictoryChart>
-  </c.Box>
+  </c.Flex>
  );
 };
 

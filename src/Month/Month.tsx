@@ -101,7 +101,13 @@ const Month = () => {
       </c.Flex>
       <MonthBalance currentMonthIdx={currentMonthIdx} />
       <c.Flex mt="3" direction={['column', 'row']}>
-       <c.Flex justifyContent="space-between" flexGrow="4" mr="5">
+       <c.Flex
+        justifyContent="space-between"
+        flexGrow="4"
+        mr="5"
+        overflowX="auto"
+        maxW="100%"
+       >
         {tableRows.map((row, rowIdx) => {
          return (
           <c.Flex direction="column" key={rowIdx}>

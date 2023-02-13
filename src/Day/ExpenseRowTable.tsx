@@ -8,9 +8,7 @@ const ExpenseTableRow = (props: ExpenseObject) => {
  const currentTag =
   generalContext.tags.find((t) => t.id === props.tagId) || null;
 
- const [tagIdValue, setTagIdValue] = useState<string>(
-  currentTag?.tagName || ''
- );
+ const [tagIdValue, setTagIdValue] = useState<string>(currentTag?.id || '');
 
  const [amountValue, setAmountValue] = useState<number>(props.amount);
  const [showEditingFields, setShowEditingFields] = useState(false);
@@ -87,7 +85,6 @@ const ExpenseTableRow = (props: ExpenseObject) => {
       <c.Select
        onChange={(e) => setTagIdValue(e.currentTarget.value)}
        borderColor={currentTag?.textColor || 'black'}
-       placeholder="Expense Tag"
        value={tagIdValue}
        name="tag"
        _hover={{

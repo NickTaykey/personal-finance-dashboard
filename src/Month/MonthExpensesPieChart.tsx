@@ -29,7 +29,7 @@ const MonthExpensesByChart = (props: MonthExpensesByChartProps) => {
    alignItems="center"
    w={isLargerThan500 ? '50%' : '100%'}
   >
-   <c.Text fontSize="md" fontWeight="medium" textAlign="center">
+   <c.Text fontSize="md" fontWeight="medium" textAlign="center" my="3">
     Distribution of Expenses by Tag
    </c.Text>
    <c.Flex flexGrow="2" justify="center" alignItems="center">

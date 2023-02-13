@@ -4,7 +4,12 @@ import {
  getMonthName,
 } from '../helpers';
 import GeneralContext, { MonthObject } from '../store/GeneralContext';
-import { VictoryChart, VictoryBar, VictoryTooltip } from 'victory';
+import {
+ VictoryChart,
+ VictoryBar,
+ VictoryTooltip,
+ VictoryContainer,
+} from 'victory';
 import { useContext, useState } from 'react';
 import * as c from '@chakra-ui/react';
 
@@ -43,7 +48,7 @@ const MonthExpensesByTagBarChart = (props: MonthExpensesByTagBarChartProps) => {
  }, [] as TagExpensesArray);
 
  return (
-  <c.Box flexGrow="1">
+  <c.Box flexGrow="2">
    <c.FormControl>
     <c.FormLabel textAlign="center" mb="3">
      Daily Expense Trends by Tag
@@ -61,7 +66,9 @@ const MonthExpensesByTagBarChart = (props: MonthExpensesByTagBarChartProps) => {
     </c.Select>
    </c.FormControl>
    {selectedTagId && selectedTagId.length && (
-    <VictoryChart>
+    <VictoryChart
+     containerComponent={<VictoryContainer style={{ height: '80%' }} />}
+    >
      <VictoryBar
       domain={{
        x: [

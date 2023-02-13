@@ -6,7 +6,7 @@ const NewExpenseForm = () => {
  const generalContext = useContext(GeneralContext);
  const [errorMessage, setErrorMessage] = useState<string | null>(null);
  const [amountValue, setAmountValue] = useState<number>(0);
- const [tagNameValue, setTagNameValue] = useState<string>('');
+ const [tagNameValue, setTagNameValue] = useState<string>('No Tag');
 
  const addNewExpenseHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
   const tag = generalContext.tags.find((t) => tagNameValue === t.tagName);
@@ -57,10 +57,9 @@ const NewExpenseForm = () => {
      <c.FormControl mb="3">
       <c.FormLabel>Expense Tag</c.FormLabel>
       <c.Select
-       placeholder="Expense Tag"
-       name="tag"
        onChange={(e) => setTagNameValue(e.currentTarget.value)}
        value={tagNameValue}
+       name="tag"
       >
        {generalContext.tags.map((t) => (
         <option value={t.tagName} key={crypto.randomUUID()}>

@@ -80,3 +80,7 @@ export function findNumOfExpensesLastDay(arr: TagExpensesArray) {
 
  return count;
 }
+
+export function toSnakeCase(str: string) {
+ return str.toLocaleLowerCase().replaceAll(' ', '-');
+}

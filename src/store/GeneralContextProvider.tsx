@@ -56,7 +56,7 @@ function genRandomTags() {
   const bgColor = faker.color.rgb();
   tags.push({
    textColor: isColorDark(bgColor) ? 'white' : 'black',
-   tagName: `${faker.music.genre()}`,
+   tagName: `${faker.music.genre().slice(0, 5)}`,
    id: crypto.randomUUID(),
    bgColor,
   });
@@ -72,7 +72,14 @@ const GeneralContextProvider: React.FC<{
 
  useEffect(() => {
   const generatedTags = genRandomTags();
-  setTags(generatedTags);
+  setTags(
+   generatedTags.concat({
+    id: crypto.randomUUID(),
+    textColor: 'white',
+    tagName: 'No Tag',
+    bgColor: '#737373',
+   })
+  );
   setYear(genRandomYearData(generatedTags) as MonthObject[]);
  }, []);
 

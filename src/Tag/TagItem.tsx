@@ -4,8 +4,6 @@ import { useContext, useRef, useState } from 'react';
 import * as c from '@chakra-ui/react';
 
 const TagItem = (props: TagObject) => {
- const [tagColor, setTagColor] = useState<string>(props.bgColor);
- const [tagName, setTagName] = useState<string>(props.tagName);
  const [showFields, setShowFields] = useState<boolean>(false);
  const tagColorInputRef = useRef<HTMLInputElement>(null);
  const tagNameInputRef = useRef<HTMLInputElement>(null);
@@ -23,21 +21,13 @@ const TagItem = (props: TagObject) => {
      <c.Input
       ref={tagColorInputRef}
       type="color"
-      defaultValue={tagColor}
-      /* onChange={(e) => {
-       setTagColor(e.currentTarget.value);
-       tagColorInputRef.current?.focus();
-      }} */
+      defaultValue={props.bgColor}
      />
      <c.Input
       ref={tagNameInputRef}
       mx="3"
       type="text"
-      defaultValue={tagName}
-      /* onChange={(e) => {
-       setTagName(e.currentTarget.value);
-       tagNameInputRef.current?.focus();
-      }} */
+      defaultValue={props.tagName}
      />
     </>
    ) : (
@@ -46,6 +36,7 @@ const TagItem = (props: TagObject) => {
       style={{
        width: '25px',
        height: '25px',
+       border: '1px solid black',
        borderRadius: '100%',
        backgroundColor: props.bgColor,
        color: props.textColor,
