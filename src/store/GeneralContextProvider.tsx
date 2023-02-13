@@ -64,6 +64,10 @@ function genRandomTags() {
  return tags;
 }
 
+const updateLocalStorage = (year: MonthObject[], tags: TagObject[]) => {
+ localStorage.setItem('pf-dashboard-session', JSON.stringify({ year, tags }));
+};
+
 const GeneralContextProvider: React.FC<{
  children: React.ReactNode[] | React.ReactNode;
 }> = (props) => {
@@ -71,16 +75,33 @@ const GeneralContextProvider: React.FC<{
  const [tags, setTags] = useState<TagObject[]>([]);
 
  useEffect(() => {
-  const generatedTags = genRandomTags();
-  setTags(
-   generatedTags.concat({
+  const localStorageSession = localStorage.getItem('pf-dashboard-session');
+
+  debugger;
+
+  if (localStorageSession) {
+   const parsedSession = JSON.parse(localStorageSession) as {
+    year: MonthObject[];
+    tags: TagObject[];
+   };
+   setYear(parsedSession.year);
+   setTags(parsedSession.tags);
+  } else {
+   const generatedTags = genRandomTags();
+   const generatedYear = genRandomYearData(generatedTags) as MonthObject[];
+   generatedTags.push({
     id: crypto.randomUUID(),
     textColor: 'white',
     tagName: 'No Tag',
     bgColor: '#737373',
-   })
-  );
-  setYear(genRandomYearData(generatedTags) as MonthObject[]);
+   });
+   setTags(genRandomTags);
+   setYear(generatedYear);
+   localStorage.setItem(
+    'pf-dashboard-session',
+    JSON.stringify({ tags: generatedTags, year: generatedYear })
+   );
+  }
  }, []);
 
  const [selectedDay, setSelectedDay] = useState<DayObject | null>(null);
@@ -93,15 +114,17 @@ const GeneralContextProvider: React.FC<{
     year,
     tags,
     updateBudget(monthIdx, newBudget) {
-     setYear((current) =>
-      current.map((month, idx) => {
+     setYear((current) => {
+      const ny = current.map((month, idx) => {
        return idx === monthIdx ? { ...month, monthBudget: newBudget } : month;
-      })
-     );
+      });
+      updateLocalStorage(ny, tags);
+      return ny;
+     });
     },
     updateTag(tagId, newTag) {
      setTags((tags) => {
-      return tags.map((t) =>
+      const newTags = tags.map((t) =>
        t.id === tagId
         ? {
            ...t,
@@ -110,12 +133,18 @@ const GeneralContextProvider: React.FC<{
           }
         : t
       );
+      updateLocalStorage(year, newTags);
+      return newTags;
      });
     },
     deleteTag(tagId) {
-     setTags((current) => current.filter((t) => t.id !== tagId));
+     let newTags: TagObject[];
+     setTags((current) => {
+      newTags = current.filter((t) => t.id !== tagId);
+      return newTags;
+     });
      setYear((current) => {
-      return current.map((month) => {
+      const ny = current.map((month) => {
        return {
         ...month,
         days: month.days.map((d) => {
@@ -128,11 +157,13 @@ const GeneralContextProvider: React.FC<{
         }),
        };
       });
+      updateLocalStorage(ny, newTags);
+      return ny;
      });
     },
     deleteDayExpense(expenseId) {
      setYear((current) => {
-      return current.map((month, monthId) => {
+      const ny = current.map((month, monthId) => {
        const days =
         monthId === selectedDay!.monthIdx
          ? month.days.map((day) => {
@@ -149,11 +180,13 @@ const GeneralContextProvider: React.FC<{
          : month.days;
        return { ...month, days };
       });
+      updateLocalStorage(ny, tags);
+      return ny;
      });
     },
     updateDayExpense(expense) {
      setYear((current) => {
-      return current.map((month, monthId) => {
+      const ny = current.map((month, monthId) => {
        return monthId === selectedDay!.monthIdx
         ? {
            ...month,
@@ -173,11 +206,13 @@ const GeneralContextProvider: React.FC<{
           }
         : month;
       });
+      updateLocalStorage(ny, tags);
+      return ny;
      });
     },
     addDayExpense(amount, tagId) {
      setYear((current) => {
-      return current.map((month, monthIdx) => {
+      const ny = current.map((month, monthIdx) => {
        return monthIdx === selectedDay!.monthIdx
         ? {
            ...month,
@@ -202,17 +237,23 @@ const GeneralContextProvider: React.FC<{
           }
         : month;
       });
+      updateLocalStorage(ny, tags);
+      return ny;
      });
     },
     newTag(tag) {
-     setTags((current) => [
-      ...current,
-      {
-       ...tag,
-       id: crypto.randomUUID(),
-       textColor: isColorDark(tag.bgColor) ? 'white' : 'black',
-      },
-     ]);
+     setTags((current) => {
+      const tags = [
+       ...current,
+       {
+        ...tag,
+        id: crypto.randomUUID(),
+        textColor: isColorDark(tag.bgColor) ? 'white' : 'black',
+       },
+      ];
+      updateLocalStorage(year, tags);
+      return tags;
+     });
     },
    }}
   >
