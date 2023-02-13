@@ -2,9 +2,10 @@ import type { DayObject } from '../store/GeneralContext';
 import GeneralContext from '../store/GeneralContext';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getMonthName } from '../helpers';
+import { getMonthName, TagExpensesArray } from '../helpers';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
+import { VictoryChart, VictoryAxis, VictoryBar } from 'victory';
 
 interface MonthCardProps {
  days: DayObject[];
@@ -15,13 +16,18 @@ const MonthCard = (props: MonthCardProps) => {
  const navigate = useNavigate();
  const generalContext = useContext(GeneralContext);
  const currentMonth = generalContext.year[props.monthIdx];
- const amountSpent = generalContext.year[props.monthIdx].days.reduce(
+ let amountSpent = 0;
+
+ const barsData = generalContext.year[props.monthIdx].days.reduce(
   (acm, day) => {
    const tot = day.expenses.reduce((tot, exp) => (tot += exp.amount), 0);
-   return acm + tot;
+   amountSpent += tot;
+   if (tot === 0) return acm;
+   return [...acm, { x: day.monthDayNumber, y: tot }];
   },
-  0
+  [] as { x: number; y: number }[]
  );
+
  return (
   <c.Flex
    bgColor={
@@ -56,6 +62,7 @@ const MonthCard = (props: MonthCardProps) => {
      {Math.abs(currentMonth.monthBudget - amountSpent).toFixed(2)}
     </c.Heading>
    </c.Flex>
+   <VictoryBar data={barsData} width={500} height={200} />
   </c.Flex>
  );
 };

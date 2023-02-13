@@ -11,7 +11,7 @@ const MonthExpensesByChart = (props: MonthExpensesByChartProps) => {
  const [isLargerThan500] = c.useMediaQuery('(min-width: 500px)');
  const generalContext = useContext(GeneralContext);
 
- const expensesByTagPieChartData = generalContext.tags.map((tag) => {
+ const expensesByTagPieChartData = generalContext.tags.reduce((acm, tag) => {
   const totTag = props.monthObject.days.reduce((acm, day) => {
    const totDay = day.expenses.reduce(
     (acm, exp) => (exp.tagId === tag.id ? acm + exp.amount : acm),
@@ -19,8 +19,9 @@ const MonthExpensesByChart = (props: MonthExpensesByChartProps) => {
    );
    return acm + totDay;
   }, 0);
-  return { x: tag.tagName, y: totTag };
- });
+  if (totTag === 0) return acm;
+  return [...acm, { x: tag.tagName, y: totTag }];
+ }, [] as { x: string; y: number }[]);
 
  return (
   <c.Flex
@@ -32,15 +33,17 @@ const MonthExpensesByChart = (props: MonthExpensesByChartProps) => {
    <c.Text fontSize="md" fontWeight="medium" textAlign="center" my="3">
     Distribution of Expenses by Tag
    </c.Text>
-   <c.Flex flexGrow="2" justify="center" alignItems="center">
-    <VictoryPie
-     colorScale={generalContext.tags.map((t) => t.bgColor)}
-     data={expensesByTagPieChartData}
-     width={600}
-     height={400}
-     labelComponent={<VictoryLabel style={{ fontSize: 20 }} />}
-    />
-   </c.Flex>
+   <c.Box>
+    <c.Flex flexGrow="2" justify="center" alignItems="center">
+     <VictoryPie
+      labelComponent={<VictoryLabel style={{ fontSize: 12.5 }} angle={45} />}
+      colorScale={generalContext.tags.map((t) => t.bgColor)}
+      data={expensesByTagPieChartData}
+      width={600}
+      height={400}
+     />
+    </c.Flex>
+   </c.Box>
   </c.Flex>
  );
 };

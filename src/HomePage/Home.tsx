@@ -1,11 +1,12 @@
-import GeneralContext from './store/GeneralContext';
+import GeneralContext from '../store/GeneralContext';
 import { AiTwotoneFire } from 'react-icons/ai';
 import { MdSavings } from 'react-icons/md';
-import MonthCard from './Month/MonthCard';
-import TagsDrawer from './Tag/TagsDrawer';
+import MonthCard from '../Month/MonthCard';
+import TagsDrawer from '../Tag/TagsDrawer';
 import { FaTags } from 'react-icons/fa';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
+import YearExpenseByMonthPieChart from './YearExpenseByMonthPieChart';
 
 const Home = () => {
  const { isOpen, onOpen, onClose } = c.useDisclosure();
@@ -32,7 +33,7 @@ const Home = () => {
  const date = new Date();
 
  return (
-  <>
+  <c.Flex alignItems="center">
    <TagsDrawer isOpen={isOpen} onClose={onClose} />
    <c.VStack m="5" alignItems="start">
     <c.Flex alignItems="center">
@@ -68,7 +69,8 @@ const Home = () => {
      ))}
     </c.SimpleGrid>
    </c.VStack>
-  </>
+   <YearExpenseByMonthPieChart />
+  </c.Flex>
  );
 };
 

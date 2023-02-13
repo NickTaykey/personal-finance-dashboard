@@ -1,12 +1,5 @@
+import { VictoryStack, VictoryBar, VictoryAxis, VictoryGroup } from 'victory';
 import GeneralContext, { MonthObject } from '../store/GeneralContext';
-import {
- VictoryStack,
- VictoryBar,
- VictoryAxis,
- VictoryGroup,
- VictoryContainer,
- VictoryChart,
-} from 'victory';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
 

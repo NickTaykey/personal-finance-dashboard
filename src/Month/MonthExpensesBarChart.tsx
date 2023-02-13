@@ -24,8 +24,6 @@ const MonthExpensesBarChart = (props: MonthExpensesByBarChartProps) => {
   ];
  }, [] as TagExpensesArray);
 
- console.log(monthExpenses);
-
  return (
   <c.Flex
    justifyContent="space-between"
