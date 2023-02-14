@@ -1,9 +1,10 @@
 import { FaArrowLeft, FaExpandArrowsAlt, FaTags } from 'react-icons/fa';
 import GeneralContext, { DayObject } from '../store/GeneralContext';
+import DownloadMonthCSVButton from './DownLoadMonthCSVButton';
 import MonthExpensesBarCharts from './MonthExpensesBarCharts';
 import MonthExpensesByChart from './MonthExpensesPieChart';
 import { useParams, useNavigate } from 'react-router-dom';
-import { monthNameToNumber } from '../helpers';
+import { getMonthNumber } from '../helpers';
 import TagsDrawer from '../Tag/TagsDrawer';
 import MonthBalance from './MonthBalance';
 import DayModal from '../Day/DayModal';
@@ -57,9 +58,9 @@ const Month = () => {
  if (
   monthName &&
   generalContext.year.length &&
-  monthNameToNumber(monthName) !== -1
+  getMonthNumber(monthName) !== -1
  ) {
-  const selectedMonthIdx = monthNameToNumber(monthName) - 1;
+  const selectedMonthIdx = getMonthNumber(monthName) - 1;
   if (selectedMonthIdx >= 0) {
    const monthObject = generalContext.year[selectedMonthIdx];
 
@@ -81,23 +82,28 @@ const Month = () => {
     <>
      <TagsDrawer isOpen={isDrawerOpen} onClose={onDrawerClose} />
      <c.Box m="5" w="90%">
-      <c.Flex justify="start" alignItems="center">
-       <c.IconButton
-        onClick={() => navigate('/')}
-        fontSize="2xl"
-        bgColor="transparent"
-        icon={<FaArrowLeft />}
-        aria-label="Go back home"
-       />
-       <c.Heading textTransform="uppercase" mx="3">
-        {monthName}
-       </c.Heading>
-       <c.IconButton
-        colorScheme="telegram"
-        onClick={onDrawerOpen}
-        aria-label="Open tags menu"
-        icon={<FaTags />}
-       />
+      <c.Flex flexDirection={['column', 'row']}>
+       <c.Flex justify="start" alignItems="center">
+        <c.IconButton
+         onClick={() => navigate('/')}
+         fontSize="2xl"
+         bgColor="transparent"
+         icon={<FaArrowLeft />}
+         aria-label="Go back home"
+         mr="3"
+        />
+        <c.Heading textTransform="uppercase">{monthName}</c.Heading>
+        <c.IconButton
+         mx="3"
+         colorScheme="telegram"
+         onClick={onDrawerOpen}
+         aria-label="Open tags menu"
+         icon={<FaTags />}
+        />
+       </c.Flex>
+       <c.Flex mt={[3, 0]}>
+        <DownloadMonthCSVButton />
+       </c.Flex>
       </c.Flex>
       <MonthBalance currentMonthIdx={currentMonthIdx} />
       <c.Flex mt="3" direction={['column', 'row']}>

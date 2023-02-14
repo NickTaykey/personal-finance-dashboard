@@ -1,4 +1,6 @@
 import YearExpenseByMonthPieChart from './YearExpenseByMonthPieChart';
+import YearExpenseByMonthBarChart from './YearExpenseByMonthBarChart';
+import DownloadYearCSVButton from './DownloadYearCSVButton';
 import GeneralContext from '../store/GeneralContext';
 import { AiTwotoneFire } from 'react-icons/ai';
 import { MdSavings } from 'react-icons/md';
@@ -7,7 +9,6 @@ import TagsDrawer from '../Tag/TagsDrawer';
 import { FaTags } from 'react-icons/fa';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
-import DownloadYearCSVButton from './DownloadYearCSVButton';
 
 const Home = () => {
  const { isOpen, onOpen, onClose } = c.useDisclosure();
@@ -35,7 +36,7 @@ const Home = () => {
  const date = new Date();
 
  return (
-  <c.Flex alignItems="center">
+  <c.Flex alignItems="center" flexDirection={['column', null, 'row']}>
    <TagsDrawer isOpen={isOpen} onClose={onClose} />
    <c.VStack m="5" alignItems="start">
     <c.Flex alignItems="center">
@@ -72,7 +73,10 @@ const Home = () => {
      ))}
     </c.SimpleGrid>
    </c.VStack>
-   <YearExpenseByMonthPieChart />
+   <c.Flex flexDirection="column" alignItems="center" justifyContent="center">
+    <YearExpenseByMonthPieChart />
+    <YearExpenseByMonthBarChart />
+   </c.Flex>
   </c.Flex>
  );
 };

@@ -55,7 +55,7 @@ const MonthDaysCompositionBarChart = (
     />
     <VictoryStack
      colorScale={Object.values(dailyTagAmountsById).map((_, idx) =>
-      tags[idx] ? tags[idx].bgColor : '#e0dcc3'
+      tags[idx] ? tags[idx].bgColor : '#737373'
      )}
     >
      {Object.entries(dailyTagAmountsById).map(([tagId, dailyAmounts]) => (

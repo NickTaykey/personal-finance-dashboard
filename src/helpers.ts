@@ -1,4 +1,5 @@
 import { MonthObject, TagObject } from './store/GeneralContext';
+import { ESMap } from 'typescript';
 
 const monthNames = [
  'Jan',
@@ -32,7 +33,7 @@ export function isColorDark(hex: string) {
  return brightness < 128;
 }
 
-export function monthNameToNumber(month: string) {
+export function getMonthNumber(month: string) {
  switch (month.toLowerCase()) {
   case 'jan':
    return 1;
@@ -84,49 +85,64 @@ export function findNumOfExpensesLastDay(arr: TagExpensesArray) {
  return count;
 }
 
+function generateTagNamesHashMap(tags: TagObject[]) {
+ const tagNamesByIdMap = tags.reduce((map, tag) => {
+  map.set(tag.id, tag.tagName);
+  return map;
+ }, new Map<string, string>());
+ tagNamesByIdMap.set('no_tag', 'No Tag');
+ return tagNamesByIdMap;
+}
+
 export function convertYearToCSV(
  year: MonthObject[],
  tags: TagObject[]
 ): string {
- const tagNamesById = tags.reduce((obj, tag) => {
-  obj[tag.id] = tag.tagName;
-  return obj;
- }, {} as Record<string, string>);
- tagNamesById.no_tag = 'No Tag';
+ const tagNamesByIdMap = generateTagNamesHashMap(tags);
 
- const header = ['week day', 'day', 'amount', 'tag name'];
  const monthRows = year.map((month, monthIdx) => {
-  const monthHeader = [
-   'Month:',
-   getMonthName(monthIdx),
-   'Budget (€):',
-   month.monthBudget,
-  ];
-  let tot = 0;
-  const monthRows = month.days.flatMap(({ day, monthDayNumber, expenses }) => {
-   const dayRows = expenses.map(({ amount, tagId }) => {
-    tot += amount;
-    return [
-     day,
-     monthDayNumber,
-     amount,
-     tagNamesById[tagId === null ? 'no_tag' : tagId],
-    ];
-   });
-   return dayRows;
-  });
-  return [monthHeader, header, ...monthRows, ['Tot (€)', tot.toFixed(2)]];
+  return convertMonthToCSV(month, monthIdx, tags, tagNamesByIdMap);
  });
- const csv = monthRows
-  .map((monthRow) => {
-   return (
-    monthRow
-     .map((dayRow) => {
-      return dayRow.join(',') + '\n';
-     })
-     .join('') + '\n'
-   );
-  })
-  .join('');
- return csv;
+
+ return monthRows.join('\n');
+}
+
+export function convertMonthToCSV(
+ month: MonthObject,
+ monthIdx: number,
+ tags: TagObject[],
+ tagNamesByIdMap?: ESMap<string, string>
+) {
+ const header = ['week day', 'day', 'amount', 'tag name'];
+
+ if (!tagNamesByIdMap) {
+  tagNamesByIdMap = generateTagNamesHashMap(tags);
+ }
+
+ const monthHeader = [
+  'Month:',
+  getMonthName(monthIdx),
+  'Budget (€):',
+  month.monthBudget,
+ ];
+
+ let tot = 0;
+
+ const monthRows = month.days.flatMap(({ day, monthDayNumber, expenses }) => {
+  const dayRows = expenses.map(({ amount, tagId }) => {
+   tot += amount;
+   return [
+    day,
+    monthDayNumber,
+    amount,
+    tagNamesByIdMap!.get(tagId === null ? 'no_tag' : tagId),
+   ];
+  });
+  return dayRows;
+ });
+
+ const rows = [monthHeader, header, ...monthRows, ['Tot (€)', tot.toFixed(2)]];
+ const csvRows = rows.map((dayRow) => dayRow.join(',') + '\n').join('') + '\n';
+
+ return csvRows;
 }

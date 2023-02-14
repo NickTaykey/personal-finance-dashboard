@@ -1,6 +1,7 @@
-import * as c from '@chakra-ui/react';
 import GeneralContext from '../store/GeneralContext';
 import React, { useContext, useState } from 'react';
+import * as c from '@chakra-ui/react';
+import { FaPlus } from 'react-icons/fa';
 
 const NewExpenseForm = () => {
  const generalContext = useContext(GeneralContext);
@@ -69,7 +70,7 @@ const NewExpenseForm = () => {
       </c.Select>
      </c.FormControl>
      <c.Button colorScheme="green" width="100%" onClick={addNewExpenseHandler}>
-      Add
+      <FaPlus /> <c.Box ml="2">Add</c.Box>
      </c.Button>
     </c.AccordionPanel>
    </c.AccordionItem>

@@ -1,6 +1,6 @@
 import GeneralContext from '../store/GeneralContext';
 import { useContext, useRef, useState } from 'react';
-import { isColorDark } from '../helpers';
+import { FaPlus } from 'react-icons/fa';
 import * as c from '@chakra-ui/react';
 
 const NewTagForm = () => {
@@ -53,7 +53,7 @@ const NewTagForm = () => {
     </c.FormControl>
    </c.Flex>
    <c.Button colorScheme="green" w="100%" onClick={createNewTag} mb="6">
-    SAVE
+    <FaPlus /> <c.Box ml="2">Add</c.Box>
    </c.Button>
   </>
  );
