@@ -77,8 +77,6 @@ const GeneralContextProvider: React.FC<{
  useEffect(() => {
   const localStorageSession = localStorage.getItem('pf-dashboard-session');
 
-  debugger;
-
   if (localStorageSession) {
    const parsedSession = JSON.parse(localStorageSession) as {
     year: MonthObject[];

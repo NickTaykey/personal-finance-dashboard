@@ -1,3 +1,4 @@
+import YearExpenseByMonthPieChart from './YearExpenseByMonthPieChart';
 import GeneralContext from '../store/GeneralContext';
 import { AiTwotoneFire } from 'react-icons/ai';
 import { MdSavings } from 'react-icons/md';
@@ -6,11 +7,12 @@ import TagsDrawer from '../Tag/TagsDrawer';
 import { FaTags } from 'react-icons/fa';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
-import YearExpenseByMonthPieChart from './YearExpenseByMonthPieChart';
+import DownloadYearCSVButton from './DownloadYearCSVButton';
 
 const Home = () => {
  const { isOpen, onOpen, onClose } = c.useDisclosure();
  const generalContext = useContext(GeneralContext);
+
  const totYear = generalContext.year.reduce(
   (totYear, month) => {
    const totMonth = month.days.reduce((totMonth, d) => {
@@ -45,6 +47,7 @@ const Home = () => {
       icon={<FaTags />}
      />
     </c.Flex>
+    <DownloadYearCSVButton />
     <c.Box my="3" textAlign="left">
      <c.Flex fontSize="2xl" alignItems="center">
       <MdSavings />{' '}

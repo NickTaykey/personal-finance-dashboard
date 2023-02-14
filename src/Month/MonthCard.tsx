@@ -2,10 +2,10 @@ import type { DayObject } from '../store/GeneralContext';
 import GeneralContext from '../store/GeneralContext';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { getMonthName, TagExpensesArray } from '../helpers';
+import { getMonthName } from '../helpers';
 import * as c from '@chakra-ui/react';
+import { VictoryBar } from 'victory';
 import { useContext } from 'react';
-import { VictoryChart, VictoryAxis, VictoryBar } from 'victory';
 
 interface MonthCardProps {
  days: DayObject[];

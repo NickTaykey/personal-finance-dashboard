@@ -1,18 +1,21 @@
+import { MonthObject, TagObject } from './store/GeneralContext';
+
+const monthNames = [
+ 'Jan',
+ 'Feb',
+ 'Mar',
+ 'Apr',
+ 'May',
+ 'Jun',
+ 'Jul',
+ 'Aug',
+ 'Sep',
+ 'Oct',
+ 'Nov',
+ 'Dec',
+];
+
 export function getMonthName(monthNum: number) {
- const monthNames = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
- ];
  return monthNames[monthNum];
 }
 
@@ -79,4 +82,51 @@ export function findNumOfExpensesLastDay(arr: TagExpensesArray) {
  }
 
  return count;
+}
+
+export function convertYearToCSV(
+ year: MonthObject[],
+ tags: TagObject[]
+): string {
+ const tagNamesById = tags.reduce((obj, tag) => {
+  obj[tag.id] = tag.tagName;
+  return obj;
+ }, {} as Record<string, string>);
+ tagNamesById.no_tag = 'No Tag';
+
+ const header = ['week day', 'day', 'amount', 'tag name'];
+ const monthRows = year.map((month, monthIdx) => {
+  const monthHeader = [
+   'Month:',
+   getMonthName(monthIdx),
+   'Budget (€):',
+   month.monthBudget,
+  ];
+  let tot = 0;
+  const monthRows = month.days.flatMap(({ day, monthDayNumber, expenses }) => {
+   const dayRows = expenses.map(({ amount, tagId }) => {
+    tot += amount;
+    return [
+     day,
+     monthDayNumber,
+     amount,
+     tagNamesById[tagId === null ? 'no_tag' : tagId],
+    ];
+   });
+   return dayRows;
+  });
+  return [monthHeader, header, ...monthRows, ['Tot (€)', tot.toFixed(2)]];
+ });
+ const csv = monthRows
+  .map((monthRow) => {
+   return (
+    monthRow
+     .map((dayRow) => {
+      return dayRow.join(',') + '\n';
+     })
+     .join('') + '\n'
+   );
+  })
+  .join('');
+ return csv;
 }
