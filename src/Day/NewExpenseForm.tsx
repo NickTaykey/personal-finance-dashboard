@@ -8,7 +8,7 @@ const NewExpenseForm = () => {
  const generalContext = useContext(GeneralContext);
  const [errorMessage, setErrorMessage] = useState<string | null>(null);
  const [amountValue, setAmountValue] = useState<number>(0);
- const [tagId, setTagId] = useState<string>('No Tag');
+ const [tagId, setTagId] = useState<string>(generalContext.noTagObjectId!);
 
  const addNewExpenseHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
   const tag = tagId

@@ -58,7 +58,7 @@ const MonthExpensesByTagBarChart = (props: MonthExpensesByTagBarChartProps) => {
     <c.Select
      placeholder="Select Tag"
      onChange={(e) => setSelectedTagId(e.currentTarget.value)}
-     defaultValue={generalContext.tags[0].id}
+     defaultValue={selectedTagId || generalContext.tags[0].id}
     >
      {generalContext.tags.map((t) => (
       <option key={`bar-chart-tag-${t.id}`} value={t.id}>
@@ -74,9 +74,13 @@ const MonthExpensesByTagBarChart = (props: MonthExpensesByTagBarChartProps) => {
      domain={{
       x: [
        1,
-       props.monthObject.days.length + findNumOfExpensesLastDay(tagExpenses),
+       props.monthObject.days.length +
+        (tagExpenses.length > 0 ? findNumOfExpensesLastDay(tagExpenses) : 0),
       ],
-      y: [0, tagExpenses.reduce((acm, exp) => (acm > exp.y ? acm : exp.y), 0)],
+      y: [
+       0,
+       tagExpenses.reduce((acm, exp) => (acm > exp.y ? acm : exp.y), 0) || 100,
+      ],
      }}
      labelComponent={<VictoryTooltip />}
      style={{

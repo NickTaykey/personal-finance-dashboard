@@ -1,5 +1,11 @@
-import { DayObject, MonthObject, TagObject } from './store/GeneralContext';
+import {
+ ExpenseObject,
+ MonthObject,
+ DayObject,
+ TagObject,
+} from './store/GeneralContext';
 import { ESMap } from 'typescript';
+import { faker } from '@faker-js/faker';
 
 export const localStorageId = 'pf-dashboard-session';
 
@@ -73,6 +79,7 @@ export function getMonthNumber(month: string) {
 }
 
 export function findNumOfExpensesLastDay(arr: TagExpensesArray) {
+ if (arr.length === 0) return 0;
  let maxValue = arr[arr.length - 1].x;
  let count = 1;
 
@@ -134,7 +141,7 @@ export function convertMonthToCSV(
     day,
     monthDayNumber,
     amount,
-    tagNamesByIdMap!.get(tagId === null ? 'no_tag' : tagId),
+    tagNamesByIdMap!.get(tagId === null ? 'no_tag' : tagId)?.tagName,
    ];
   });
   return dayRows;
@@ -154,3 +161,63 @@ export function divideArray(array: DayObject[]) {
  }
  return chunks;
 }
+
+export function genRandomYearData(tags: TagObject[]) {
+ const now = new Date();
+ const currentYear = now.getFullYear();
+ const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+ const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+ const months = [];
+
+ for (let i = 0; i < 12; i++) {
+  let daysInCurrentMonth = [];
+  const monthStart = new Date(currentYear, i, 1);
+  const daysInCurrMonth = daysInMonth[i];
+
+  for (let j = 1; j <= daysInCurrMonth; j++) {
+   const dayOfWeekIndex = (monthStart.getDay() + j - 1) % 7;
+   const expenses: ExpenseObject[] = [];
+   for (let n = 0; n < Math.trunc(Math.random() * 30); ++n) {
+    expenses.push({
+     amount: Number((Math.random() * 10).toFixed(2)),
+     id: crypto.randomUUID(),
+     tagId: tags[Math.floor(Math.random() * tags.length)].id,
+    });
+   }
+
+   daysInCurrentMonth.push({
+    id: crypto.randomUUID(),
+    day: daysOfWeek[dayOfWeekIndex],
+    monthDayNumber: j,
+    monthIdx: i,
+    expenses,
+   });
+  }
+
+  months.push({
+   monthBudget: Math.trunc(Math.random() * 3000),
+   days: daysInCurrentMonth,
+  });
+ }
+
+ return months;
+}
+
+export function genRandomTags() {
+ const n = Math.trunc(Math.random() * 10 + 3);
+ const tags: TagObject[] = [];
+ for (let i = 0; i < n; i++) {
+  const bgColor = faker.color.rgb();
+  tags.push({
+   textColor: isColorDark(bgColor) ? 'white' : 'black',
+   tagName: `${faker.music.genre().slice(0, 5)}`,
+   id: crypto.randomUUID(),
+   bgColor,
+  });
+ }
+ return tags;
+}
+
+export const updateLocalStorage = (year: MonthObject[], tags: TagObject[]) => {
+ localStorage.setItem(localStorageId, JSON.stringify({ year, tags }));
+};

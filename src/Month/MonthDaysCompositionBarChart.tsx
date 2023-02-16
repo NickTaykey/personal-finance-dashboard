@@ -14,32 +14,28 @@ const MonthDaysCompositionBarChart = (
 ) => {
  const { tags } = useContext(GeneralContext);
 
- const dailyTagAmountsById = tags.reduce((acm, tag) => {
-  acm[tag.id] = [];
-  return acm;
- }, {} as DailyTagAmountsObject);
- dailyTagAmountsById.no_tag = [];
+ const dailyTagAmountsById: DailyTagAmountsObject = {};
+
+ for (const tag of tags) {
+  dailyTagAmountsById[tag.id] = [];
+ }
 
  let maxAmountSpentDaily = 0;
 
- props.monthObject.days.forEach((day) => {
-  Object.keys(dailyTagAmountsById).forEach((key) => {
-   dailyTagAmountsById[key].push({ x: day.monthDayNumber.toString(), y: 0 });
-  });
+ for (const [dayIdx, day] of Object.entries(props.monthObject.days)) {
   let total = 0;
-  day.expenses.forEach((exp) => {
-   if (exp.tagId) {
-    const lastIdx = dailyTagAmountsById[exp.tagId].length - 1;
-    dailyTagAmountsById[exp.tagId][lastIdx].y += exp.amount;
-   } else {
-    const lastIdx = dailyTagAmountsById.no_tag.length - 1;
-    dailyTagAmountsById.no_tag[lastIdx].y += exp.amount;
+  for (const key in dailyTagAmountsById) {
+   dailyTagAmountsById[key].push({ x: day.monthDayNumber.toString(), y: 0 });
+  }
+  for (const expense of day.expenses) {
+   if (dailyTagAmountsById[expense.tagId]) {
+    dailyTagAmountsById[expense.tagId][Number(dayIdx)].y += expense.amount;
+    total += expense.amount;
    }
-   total += exp.amount;
-  });
+  }
   maxAmountSpentDaily =
    total > maxAmountSpentDaily ? total : maxAmountSpentDaily;
- });
+ }
 
  return (
   <c.Box flexGrow="2">

@@ -144,7 +144,7 @@ const Month = () => {
          );
         })}
        </c.Flex>
-       <MonthExpensesByChart monthObject={monthObject} />
+       <MonthExpensesByChart />
       </c.Flex>
       <MonthExpensesBarCharts monthObject={monthObject} />
      </c.Box>

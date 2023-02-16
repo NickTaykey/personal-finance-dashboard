@@ -19,11 +19,11 @@ const router = createBrowserRouter([
 function App() {
  return (
   <div className="App">
-   <ChakraProvider>
-    <GeneralContextProvider>
+   <GeneralContextProvider>
+    <ChakraProvider>
      <RouterProvider router={router} />
-    </GeneralContextProvider>
-   </ChakraProvider>
+    </ChakraProvider>
+   </GeneralContextProvider>
   </div>
  );
 }

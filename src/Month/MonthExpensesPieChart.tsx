@@ -1,18 +1,18 @@
-import GeneralContext, { MonthObject } from '../store/GeneralContext';
+import GeneralContext from '../store/GeneralContext';
 import { VictoryLabel, VictoryPie } from 'victory';
+import { useParams } from 'react-router-dom';
+import { getMonthNumber } from '../helpers';
 import * as c from '@chakra-ui/react';
 import { useContext } from 'react';
 
-interface MonthExpensesByChartProps {
- monthObject: MonthObject;
-}
-
-const MonthExpensesByChart = (props: MonthExpensesByChartProps) => {
+const MonthExpensesByChart = () => {
+ const { month } = useParams();
  const [isLargerThan500] = c.useMediaQuery('(min-width: 500px)');
  const generalContext = useContext(GeneralContext);
 
- const expensesByTagPieChartData = generalContext.tags.reduce((acm, tag) => {
-  const totTag = props.monthObject.days.reduce((acm, day) => {
+ const currentMonth = generalContext.year[getMonthNumber(month!) - 1];
+ const pieChartData = generalContext.tags.reduce((acm, tag) => {
+  const totTag = currentMonth.days.reduce((acm, day) => {
    const totDay = day.expenses.reduce(
     (acm, exp) => (exp.tagId === tag.id ? acm + exp.amount : acm),
     0
@@ -38,7 +38,7 @@ const MonthExpensesByChart = (props: MonthExpensesByChartProps) => {
      <VictoryPie
       labelComponent={<VictoryLabel style={{ fontSize: 12.5 }} angle={45} />}
       colorScale={generalContext.tags.map((t) => t.bgColor)}
-      data={expensesByTagPieChartData}
+      data={pieChartData}
       width={600}
       height={400}
      />

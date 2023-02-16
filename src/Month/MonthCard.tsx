@@ -50,7 +50,7 @@ const MonthCard = (props: MonthCardProps) => {
     </c.Box>
    </c.Flex>
    <c.Heading fontSize="lg" my="5" textAlign="left">
-    Budget: {amountSpent.toFixed()}
+    Budget: {currentMonth.monthBudget}
    </c.Heading>
    <c.Flex alignItems="center">
     {currentMonth.monthBudget - amountSpent > 0 ? (

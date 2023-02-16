@@ -1,72 +1,16 @@
 import GeneralContext, {
- ExpenseObject,
  MonthObject,
  TagObject,
  DayObject,
 } from './GeneralContext';
-import { isColorDark, localStorageId } from '../helpers';
+import {
+ updateLocalStorage,
+ genRandomYearData,
+ localStorageId,
+ genRandomTags,
+ isColorDark,
+} from '../helpers';
 import { useEffect, useState } from 'react';
-import { faker } from '@faker-js/faker';
-
-function genRandomYearData(tags: TagObject[]) {
- const now = new Date();
- const currentYear = now.getFullYear();
- const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
- const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
- const months = [];
-
- for (let i = 0; i < 12; i++) {
-  let daysInCurrentMonth = [];
-  const monthStart = new Date(currentYear, i, 1);
-  const daysInCurrMonth = daysInMonth[i];
-
-  for (let j = 1; j <= daysInCurrMonth; j++) {
-   const dayOfWeekIndex = (monthStart.getDay() + j - 1) % 7;
-   const expenses: ExpenseObject[] = [];
-   for (let n = 0; n < Math.trunc(Math.random() * 30); ++n) {
-    expenses.push({
-     amount: Number((Math.random() * 10).toFixed(2)),
-     id: crypto.randomUUID(),
-     tagId: tags[Math.floor(Math.random() * tags.length)].id,
-    });
-   }
-
-   daysInCurrentMonth.push({
-    id: crypto.randomUUID(),
-    day: daysOfWeek[dayOfWeekIndex],
-    monthDayNumber: j,
-    monthIdx: i,
-    expenses,
-   });
-  }
-
-  months.push({
-   monthBudget: Math.trunc(Math.random() * 3000),
-   days: daysInCurrentMonth,
-  });
- }
-
- return months;
-}
-
-function genRandomTags() {
- const n = Math.trunc(Math.random() * 10 + 3);
- const tags: TagObject[] = [];
- for (let i = 0; i < n; i++) {
-  const bgColor = faker.color.rgb();
-  tags.push({
-   textColor: isColorDark(bgColor) ? 'white' : 'black',
-   tagName: `${faker.music.genre().slice(0, 5)}`,
-   id: crypto.randomUUID(),
-   bgColor,
-  });
- }
- return tags;
-}
-
-const updateLocalStorage = (year: MonthObject[], tags: TagObject[]) => {
- localStorage.setItem(localStorageId, JSON.stringify({ year, tags }));
-};
 
 const GeneralContextProvider: React.FC<{
  children: React.ReactNode[] | React.ReactNode;
@@ -98,12 +42,9 @@ const GeneralContextProvider: React.FC<{
     ...generatedTags,
    ];
    setNoTagObjectId(generatedTags[0].id);
-   setTags(genRandomTags);
+   setTags(generatedTags);
    setYear(generatedYear);
-   localStorage.setItem(
-    localStorageId,
-    JSON.stringify({ tags: generatedTags, year: generatedYear })
-   );
+   updateLocalStorage(generatedYear, generatedTags);
   }
  }, []);
 
@@ -156,7 +97,9 @@ const GeneralContextProvider: React.FC<{
          return {
           ...d,
           expenses: d.expenses.map((e) => {
-           return e.tagId === tagId ? { ...e, tag: null } : e;
+           return e.tagId === tagId
+            ? { ...e, tagId: noTagObjectId as string }
+            : e;
           }),
          };
         }),
