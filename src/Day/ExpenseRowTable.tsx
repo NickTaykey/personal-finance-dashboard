@@ -1,15 +1,16 @@
 import GeneralContext, { ExpenseObject } from '../store/GeneralContext';
 import { FaCheck, FaTimes, FaEdit, FaTrash } from 'react-icons/fa';
+import { generateTagNamesMap } from '../helpers';
 import { useState, useContext } from 'react';
 import * as c from '@chakra-ui/react';
 
 const ExpenseTableRow = (props: ExpenseObject) => {
  const generalContext = useContext(GeneralContext);
- const currentTag =
-  generalContext.tags.find((t) => t.id === props.tagId) || null;
+ const currentTag = generateTagNamesMap(generalContext.tags).get(props.tagId);
 
- const [tagIdValue, setTagIdValue] = useState<string>(currentTag?.id || '');
-
+ const [tagIdValue, setTagIdValue] = useState<string>(
+  currentTag ? currentTag.id : ''
+ );
  const [amountValue, setAmountValue] = useState<number>(props.amount);
  const [showEditingFields, setShowEditingFields] = useState(false);
 

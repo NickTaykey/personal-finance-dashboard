@@ -1,5 +1,13 @@
-import { MonthObject, TagObject } from './store/GeneralContext';
+import { DayObject, MonthObject, TagObject } from './store/GeneralContext';
 import { ESMap } from 'typescript';
+
+export const localStorageId = 'pf-dashboard-session';
+
+export type TagExpensesArray = {
+ x: number;
+ y: number;
+ label: string;
+}[];
 
 const monthNames = [
  'Jan',
@@ -64,12 +72,6 @@ export function getMonthNumber(month: string) {
  }
 }
 
-export type TagExpensesArray = {
- x: number;
- y: number;
- label: string;
-}[];
-
 export function findNumOfExpensesLastDay(arr: TagExpensesArray) {
  let maxValue = arr[arr.length - 1].x;
  let count = 1;
@@ -85,20 +87,17 @@ export function findNumOfExpensesLastDay(arr: TagExpensesArray) {
  return count;
 }
 
-function generateTagNamesHashMap(tags: TagObject[]) {
- const tagNamesByIdMap = tags.reduce((map, tag) => {
-  map.set(tag.id, tag.tagName);
-  return map;
- }, new Map<string, string>());
- tagNamesByIdMap.set('no_tag', 'No Tag');
- return tagNamesByIdMap;
+export function generateTagNamesMap(tags: TagObject[]) {
+ const tagsMap = new Map<string, TagObject>();
+ for (const tag of tags) tagsMap.set(tag.id, tag);
+ return tagsMap;
 }
 
 export function convertYearToCSV(
  year: MonthObject[],
  tags: TagObject[]
 ): string {
- const tagNamesByIdMap = generateTagNamesHashMap(tags);
+ const tagNamesByIdMap = generateTagNamesMap(tags);
 
  const monthRows = year.map((month, monthIdx) => {
   return convertMonthToCSV(month, monthIdx, tags, tagNamesByIdMap);
@@ -111,12 +110,12 @@ export function convertMonthToCSV(
  month: MonthObject,
  monthIdx: number,
  tags: TagObject[],
- tagNamesByIdMap?: ESMap<string, string>
+ tagNamesByIdMap?: ESMap<string, TagObject>
 ) {
  const header = ['week day', 'day', 'amount', 'tag name'];
 
  if (!tagNamesByIdMap) {
-  tagNamesByIdMap = generateTagNamesHashMap(tags);
+  tagNamesByIdMap = generateTagNamesMap(tags);
  }
 
  const monthHeader = [
@@ -145,4 +144,13 @@ export function convertMonthToCSV(
  const csvRows = rows.map((dayRow) => dayRow.join(',') + '\n').join('') + '\n';
 
  return csvRows;
+}
+
+export function divideArray(array: DayObject[]) {
+ const chunkSize = Math.ceil(array.length / 4);
+ const chunks = [];
+ for (let i = 0; i < array.length; i += chunkSize) {
+  chunks.push(array.slice(i, i + chunkSize));
+ }
+ return chunks;
 }

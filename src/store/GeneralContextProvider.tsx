@@ -4,8 +4,8 @@ import GeneralContext, {
  TagObject,
  DayObject,
 } from './GeneralContext';
+import { isColorDark, localStorageId } from '../helpers';
 import { useEffect, useState } from 'react';
-import { isColorDark } from '../helpers';
 import { faker } from '@faker-js/faker';
 
 function genRandomYearData(tags: TagObject[]) {
@@ -65,7 +65,7 @@ function genRandomTags() {
 }
 
 const updateLocalStorage = (year: MonthObject[], tags: TagObject[]) => {
- localStorage.setItem('pf-dashboard-session', JSON.stringify({ year, tags }));
+ localStorage.setItem(localStorageId, JSON.stringify({ year, tags }));
 };
 
 const GeneralContextProvider: React.FC<{
@@ -75,7 +75,7 @@ const GeneralContextProvider: React.FC<{
  const [tags, setTags] = useState<TagObject[]>([]);
 
  useEffect(() => {
-  const localStorageSession = localStorage.getItem('pf-dashboard-session');
+  const localStorageSession = localStorage.getItem(localStorageId);
 
   if (localStorageSession) {
    const parsedSession = JSON.parse(localStorageSession) as {
@@ -84,29 +84,36 @@ const GeneralContextProvider: React.FC<{
    };
    setYear(parsedSession.year);
    setTags(parsedSession.tags);
+   setNoTagObjectId(parsedSession.tags[0].id);
   } else {
-   const generatedTags = genRandomTags();
+   let generatedTags = genRandomTags();
    const generatedYear = genRandomYearData(generatedTags) as MonthObject[];
-   generatedTags.push({
-    id: crypto.randomUUID(),
-    textColor: 'white',
-    tagName: 'No Tag',
-    bgColor: '#737373',
-   });
+   generatedTags = [
+    {
+     id: crypto.randomUUID(),
+     textColor: 'white',
+     tagName: 'No Tag',
+     bgColor: '#737373',
+    },
+    ...generatedTags,
+   ];
+   setNoTagObjectId(generatedTags[0].id);
    setTags(genRandomTags);
    setYear(generatedYear);
    localStorage.setItem(
-    'pf-dashboard-session',
+    localStorageId,
     JSON.stringify({ tags: generatedTags, year: generatedYear })
    );
   }
  }, []);
 
  const [selectedDay, setSelectedDay] = useState<DayObject | null>(null);
+ const [noTagObjectId, setNoTagObjectId] = useState<string | null>(null);
 
  return (
   <GeneralContext.Provider
    value={{
+    noTagObjectId,
     setSelectedDay,
     selectedDay,
     year,

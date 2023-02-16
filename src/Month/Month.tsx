@@ -1,25 +1,16 @@
+import { divideArray, getMonthNumber, localStorageId } from '../helpers';
 import { FaArrowLeft, FaExpandArrowsAlt, FaTags } from 'react-icons/fa';
 import GeneralContext, { DayObject } from '../store/GeneralContext';
 import DownloadMonthCSVButton from './DownLoadMonthCSVButton';
 import MonthExpensesBarCharts from './MonthExpensesBarCharts';
 import MonthExpensesByChart from './MonthExpensesPieChart';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getMonthNumber } from '../helpers';
+import { useContext, useEffect } from 'react';
 import TagsDrawer from '../Tag/TagsDrawer';
 import MonthBalance from './MonthBalance';
 import DayModal from '../Day/DayModal';
 import * as c from '@chakra-ui/react';
-import { useContext } from 'react';
 import React from 'react';
-
-function divideArray(array: DayObject[]) {
- const chunkSize = Math.ceil(array.length / 4);
- const chunks = [];
- for (let i = 0; i < array.length; i += chunkSize) {
-  chunks.push(array.slice(i, i + chunkSize));
- }
- return chunks;
-}
 
 const Month = () => {
  const navigate = useNavigate();
@@ -36,6 +27,10 @@ const Month = () => {
  } = c.useDisclosure();
  const generalContext = useContext(GeneralContext);
  const { month: monthName } = useParams();
+
+ useEffect(() => {
+  if (!localStorage.getItem(localStorageId)) navigate('/');
+ });
 
  let markup = (
   <c.Flex

@@ -62,15 +62,31 @@ const TagItem = (props: TagObject) => {
     ) : (
      <>
       <c.IconButton
+       bgColor={props.id === generalContext.noTagObjectId ? 'gray.300' : 'auto'}
+       _hover={{
+        bgColor:
+         props.id === generalContext.noTagObjectId ? 'gray.300' : 'auto',
+       }}
        mr="3"
        icon={<FaPen />}
        aria-label="Edit Tag"
-       onClick={() => setShowFields((c) => !c)}
+       onClick={() => {
+        if (props.id === generalContext.noTagObjectId) return;
+        setShowFields((c) => !c);
+       }}
       />
       <c.IconButton
+       bgColor={props.id === generalContext.noTagObjectId ? 'gray.300' : 'auto'}
+       _hover={{
+        bgColor:
+         props.id === generalContext.noTagObjectId ? 'gray.300' : 'auto',
+       }}
        icon={<FaTrash />}
        aria-label="Delete Tag"
-       onClick={() => generalContext.deleteTag(props.id)}
+       onClick={() => {
+        if (props.id === generalContext.noTagObjectId) return;
+        generalContext.deleteTag(props.id);
+       }}
       />
      </>
     )}

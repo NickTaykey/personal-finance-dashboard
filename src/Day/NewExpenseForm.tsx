@@ -1,17 +1,19 @@
 import GeneralContext from '../store/GeneralContext';
 import React, { useContext, useState } from 'react';
-import * as c from '@chakra-ui/react';
+import { generateTagNamesMap } from '../helpers';
 import { FaPlus } from 'react-icons/fa';
+import * as c from '@chakra-ui/react';
 
 const NewExpenseForm = () => {
  const generalContext = useContext(GeneralContext);
  const [errorMessage, setErrorMessage] = useState<string | null>(null);
  const [amountValue, setAmountValue] = useState<number>(0);
- const [tagNameValue, setTagNameValue] = useState<string>('No Tag');
+ const [tagId, setTagId] = useState<string>('No Tag');
 
  const addNewExpenseHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-  const tag = generalContext.tags.find((t) => tagNameValue === t.tagName);
-
+  const tag = tagId
+   ? generateTagNamesMap(generalContext.tags).get(tagId)
+   : null;
   if (!tag) {
    setErrorMessage('Invalid Expense Tag');
   } else if (!amountValue || isNaN(amountValue)) {
@@ -19,8 +21,8 @@ const NewExpenseForm = () => {
   } else {
    generalContext.addDayExpense(amountValue, tag.id);
    setErrorMessage(null);
-   setTagNameValue('');
    setAmountValue(0);
+   setTagId('');
   }
  };
 
@@ -58,12 +60,12 @@ const NewExpenseForm = () => {
      <c.FormControl mb="3">
       <c.FormLabel>Expense Tag</c.FormLabel>
       <c.Select
-       onChange={(e) => setTagNameValue(e.currentTarget.value)}
-       value={tagNameValue}
+       onChange={(e) => setTagId(e.currentTarget.value)}
+       value={tagId}
        name="tag"
       >
        {generalContext.tags.map((t) => (
-        <option value={t.tagName} key={crypto.randomUUID()}>
+        <option value={t.id} key={crypto.randomUUID()}>
          {t.tagName}
         </option>
        ))}

@@ -1,15 +1,16 @@
 import {
  findNumOfExpensesLastDay,
+ generateTagNamesMap,
  TagExpensesArray,
  getMonthName,
 } from '../helpers';
-import GeneralContext, { MonthObject } from '../store/GeneralContext';
 import {
+ VictoryContainer,
+ VictoryTooltip,
  VictoryChart,
  VictoryBar,
- VictoryTooltip,
- VictoryContainer,
 } from 'victory';
+import GeneralContext, { MonthObject } from '../store/GeneralContext';
 import { useContext, useState } from 'react';
 import * as c from '@chakra-ui/react';
 
@@ -21,11 +22,12 @@ const MonthExpensesByTagBarChart = (props: MonthExpensesByTagBarChartProps) => {
  const generalContext = useContext(GeneralContext);
 
  const [selectedTagId, setSelectedTagId] = useState<string | null>(
-  generalContext.tags[0].id
+  generalContext.tags.at(-1)!.id
  );
- const selectedTagObject = generalContext.tags.find(
-  (t) => t.id === selectedTagId
- );
+
+ const selectedTagObject = selectedTagId
+  ? generateTagNamesMap(generalContext.tags).get(selectedTagId)
+  : null;
 
  const tagExpenses = props.monthObject.days.reduce((acm, day) => {
   const totSpentOnTagByDay: number = day.expenses.reduce(
@@ -65,32 +67,30 @@ const MonthExpensesByTagBarChart = (props: MonthExpensesByTagBarChartProps) => {
      ))}
     </c.Select>
    </c.FormControl>
-   {selectedTagId && selectedTagId.length && (
-    <VictoryChart
-     containerComponent={<VictoryContainer style={{ height: '80%' }} />}
-    >
-     <VictoryBar
-      domain={{
-       x: [
-        1,
-        props.monthObject.days.length + findNumOfExpensesLastDay(tagExpenses),
-       ],
-       y: [0, tagExpenses.reduce((acm, exp) => (acm > exp.y ? acm : exp.y), 0)],
-      }}
-      labelComponent={<VictoryTooltip />}
-      style={{
-       data: {
-        fill: selectedTagObject
-         ? selectedTagObject.bgColor
-         : generalContext.tags[0].bgColor,
-        width: 10,
-       },
-      }}
-      alignment="start"
-      data={tagExpenses}
-     />
-    </VictoryChart>
-   )}
+   <VictoryChart
+    containerComponent={<VictoryContainer style={{ height: '80%' }} />}
+   >
+    <VictoryBar
+     domain={{
+      x: [
+       1,
+       props.monthObject.days.length + findNumOfExpensesLastDay(tagExpenses),
+      ],
+      y: [0, tagExpenses.reduce((acm, exp) => (acm > exp.y ? acm : exp.y), 0)],
+     }}
+     labelComponent={<VictoryTooltip />}
+     style={{
+      data: {
+       fill: selectedTagObject
+        ? selectedTagObject.bgColor
+        : generalContext.tags[0].bgColor,
+       width: 10,
+      },
+     }}
+     alignment="start"
+     data={tagExpenses}
+    />
+   </VictoryChart>
   </c.Box>
  );
 };
